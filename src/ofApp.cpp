@@ -29,7 +29,7 @@ void ofApp::setup(){
 	
 	previewProjector = true;
 	
-	projectorFbo.allocate(1280, 720, GL_RGB, 4);
+	projectorFbo.allocate(1280, 720, GL_RGB, 0);
 	uiFbo.allocate(screenWidth, screenHeight, GL_RGB, 2); 
 
 	projectorFbo.begin();

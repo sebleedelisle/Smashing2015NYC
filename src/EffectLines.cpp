@@ -86,7 +86,11 @@ void EffectLines :: draw(Synchroniser& sync) {
 	//poly.clear();
 	
 	camera.setPosition(0,0,600);
-	
+	hihatShape.emittingSpikes = false;
+	kickShape.emittingSpikes = false;
+	snareShape.emittingSpikes = false;
+	guitarShape.emittingSpikes = false;
+
 	
 	//float yRotation = (ofGetMouseX() - (ofGetWidth()/2));
 	
@@ -133,8 +137,8 @@ void EffectLines :: draw(Synchroniser& sync) {
 		}
 		if(sync.currentBar>=16) {
 			
-			camera.setPosition(camera.getPosition().x, ofMap(sync.currentBarFloat, 16, 32, 0, 36), camera.getPosition().z);
-			//camera.rotateAround(ofMap(sync.currentBarFloat, 16, 32, 0, 360), ofVec3f(0,1,0.5).normalize(), ofVec3f(0,0,0));
+			//camera.setPosition(camera.getPosition().x, ofMap(sync.currentBarFloat, 16, 32, 0, 36), camera.getPosition().z);
+			camera.rotateAround(ofMap(sync.currentBarFloat, 16, 48, 0, 360), ofVec3f(0,1,0.5).normalize(), ofVec3f(0,0,0));
 			
 			//if(sync.beatTriggered) {
 			//
@@ -244,13 +248,16 @@ void EffectLines:: drawShape(AudioShape& shape, Synchroniser& sync) {
 	
 	if(!shape.enabled) return;
 	
+	ofNoFill();
+	ofDisableSmoothing();
+	ofSetLineWidth(2);
 	
 	ofPushMatrix();
 	ofTranslate(shape.pos);
 
 //	ofRotateY(90);
 	
-	
+
 	if(sync.sixteenthTriggered) {
 		if(shape.sixteens[sync.current16th] >0) {
 			shape.size = shape.sixteens[sync.current16th];
@@ -280,6 +287,7 @@ void EffectLines:: drawShape(AudioShape& shape, Synchroniser& sync) {
 	
 	ofPopMatrix();
 	
+	ofSetLineWidth(1);
 	deque<LineSpike> &spikes = shape.spikes;
 	ofBeginShape();
 	ofVertex(0,0,0);
@@ -290,7 +298,11 @@ void EffectLines:: drawShape(AudioShape& shape, Synchroniser& sync) {
 		
 		int z =0;
 		for(z = 1; z<7; z++) {
-			ofVertex(spike.position.x , spike.position.y + ((abs((z%2)-1)-0.5)*4) , spike.position.z + (z*4));
+		
+			ofPoint p =ofPoint(spike.position.x , spike.position.y + ((abs((z%2)-1)-0.5)*4) , spike.position.z + (z*4));
+			p+= (ofPoint(ofRandom(-1,1), ofRandom(-1,1), ofRandom(-1,1)) *0.5);
+			
+			ofVertex(p);
 		}
 	
 		ofVertex(spike.position.x , spike.position.y , spike.position.z + (z*4));
