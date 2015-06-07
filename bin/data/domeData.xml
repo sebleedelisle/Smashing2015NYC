@@ -1,0 +1,18 @@
+<Dome_data>
+	<group>
+		<pos>640, 408, 0</pos>
+		<scale>1</scale>
+		<rot>0, 0, 0</rot>
+		<start>-480, 48, 0</start>
+		<c1>-469, -64, 0</c1>
+		<c2>-434, -176, 0</c2>
+		<end>-400, -239, 0</end>
+		<level1>-401, -236, 0</level1>
+		<level2>-434, -164, 0</level2>
+		<level3>-457, -83, 0</level3>
+		<level4>-482, 49, 0</level4>
+		<scaleXY>1, 1, 1</scaleXY>
+		<division_angle>13.5</division_angle>
+	</group>
+<Dome_data/>
+</Dome_data>
