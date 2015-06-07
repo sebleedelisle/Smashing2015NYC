@@ -9,7 +9,7 @@
 			<mask_margin_bottom>432</mask_margin_bottom>
 			<mask_margin_left>0</mask_margin_left>
 			<mask_margin_right>0</mask_margin_right>
-			<show_warp_points>0</show_warp_points>
+			<show_warp_points>1</show_warp_points>
 			<colour_change_offset>-8</colour_change_offset>
 			<flip_x>0</flip_x>
 			<flip_y>1</flip_y>

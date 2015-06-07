@@ -23,15 +23,22 @@ class LineSpike {
 	ofPoint position;
 	ofPoint vel;
 	
+	bool enabled = true;
+	
 	vector<ofPoint> graphics;
 	
 	// TODO should probably take into account the delta time
 	void update() {
 		
+		if(!enabled) return;
 		position += vel;
+		//cout << position << " " << vel <<endl;
+		life --;
+		if(life<=0) enabled = false;
 		
 	}
 	
+	float life = 300;
 //	float width;
 //	float height;
 	
@@ -61,16 +68,24 @@ class AudioShape {
 		
 		for(int i  = 0; i<spikes.size(); i++) {
 			
-			
-			lineSpike.update();
+			spikes[i].update();
+			//lineSpike.update();
 			
 			
 		}
 		
-		
+		while((spikes.size()>0) &&(!spikes.front().enabled)) spikes.pop_front();
 	}
 	
-	
+	void addLineSpike() {
+		if(!emittingSpikes) return;
+		spikes.push_back(LineSpike());
+		LineSpike& spike = spikes.back();
+		//spike.position = kickShape.pos;
+		spike.vel.z = 4;
+
+
+	}
 	
 	int numsides = 3; 
 	vector<ofPoint> points;
@@ -84,6 +99,8 @@ class AudioShape {
 	
 	bool enabled  = false;
 	
+	bool emittingSpikes = false;
+	
 	float size = 0.5;
 	float targetSize = 0.5;
 	float sizeChangeSpeed = 0.1;
@@ -94,7 +111,7 @@ class AudioShape {
 	vector<float> sixteens;
 	
 	
-	vector<LineSpike> spikes;
+	deque<LineSpike> spikes;
 };
 
 

@@ -83,9 +83,9 @@ void EffectLines::update() {
 void EffectLines :: draw(Synchroniser& sync) {
 	
 	
-	poly.clear();
+	//poly.clear();
 	
-	camera.setPosition(600,0,0);
+	camera.setPosition(0,0,600);
 	
 	
 	//float yRotation = (ofGetMouseX() - (ofGetWidth()/2));
@@ -97,7 +97,7 @@ void EffectLines :: draw(Synchroniser& sync) {
 		snareShape.enabled = false;
 		guitarShape.enabled = false;
 		
-		camera.setPosition(ofMap(sync.currentBarFloat,0,8,5000,600),0,0);
+		camera.setPosition(0,0,ofMap(sync.currentBarFloat,0,8,5000,600));
 		guitarShape.targetPos.x = 0;
 		snareShape.targetPos.x = 0;
 		kickShape.targetPos.x = 0;
@@ -133,13 +133,19 @@ void EffectLines :: draw(Synchroniser& sync) {
 		}
 		if(sync.currentBar>=16) {
 			
-			camera.rotateAround(ofMap(sync.currentBarFloat, 16, 32, 0, 360), ofVec3f(0,1,0.5).normalize(), ofVec3f(0,0,0));
+			camera.setPosition(camera.getPosition().x, ofMap(sync.currentBarFloat, 16, 32, 0, 36), camera.getPosition().z);
+			//camera.rotateAround(ofMap(sync.currentBarFloat, 16, 32, 0, 360), ofVec3f(0,1,0.5).normalize(), ofVec3f(0,0,0));
 			
-			if(sync.beatTriggered) {
-				//spikes.push_back(new LineSpike());
-				
-				
-			}
+			//if(sync.beatTriggered) {
+			//
+			//
+			//}
+			
+			hihatShape.emittingSpikes = true;
+			kickShape.emittingSpikes = true;
+			snareShape.emittingSpikes = true;
+			guitarShape.emittingSpikes = true;
+			
 		}
 	}
 	
@@ -240,22 +246,27 @@ void EffectLines:: drawShape(AudioShape& shape, Synchroniser& sync) {
 	
 	
 	ofPushMatrix();
-	ofRotateY(90);
+	ofTranslate(shape.pos);
+
+//	ofRotateY(90);
 	
 	
 	if(sync.sixteenthTriggered) {
 		if(shape.sixteens[sync.current16th] >0) {
 			shape.size = shape.sixteens[sync.current16th];
+			shape.addLineSpike();
 		}
 	}
 	
-	ofTranslate(shape.pos);
+	
+	ofPushMatrix();
 	ofRotateZ(shape.rotation);
 	ofScale(shape.masterScale,shape.masterScale);
 	if(shape.points.size()==0) {
 		ofSetCircleResolution(shape.numsides);
 		ofCircle(0,0,0,20 * shape.size);
 	} else {
+		
 		ofScale(20*shape.size, 20*shape.size);
 		ofBeginShape();
 		for(int i = 0; i<shape.points.size(); i++) {
@@ -266,6 +277,28 @@ void EffectLines:: drawShape(AudioShape& shape, Synchroniser& sync) {
 		
 		
 	}
+	
+	ofPopMatrix();
+	
+	deque<LineSpike> &spikes = shape.spikes;
+	ofBeginShape();
+	ofVertex(0,0,0);
+	for (int i = spikes.size()-1; i>=0; i-- ) {
+		LineSpike&spike = spikes[i];
+	
+		ofVertex(spike.position);
+		
+		int z =0;
+		for(z = 1; z<7; z++) {
+			ofVertex(spike.position.x , spike.position.y + ((abs((z%2)-1)-0.5)*4) , spike.position.z + (z*4));
+		}
+	
+		ofVertex(spike.position.x , spike.position.y , spike.position.z + (z*4));
+		
+	
+	}
+	ofEndShape();
+		
 	ofPopMatrix();
 	
 }
