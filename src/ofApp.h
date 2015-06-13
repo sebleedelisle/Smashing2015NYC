@@ -69,7 +69,7 @@ class ofApp : public ofBaseApp{
 	void drawSpirograph(ofPoint pos, int numrevolutions, float smallradius, float largeradius, float start, float end, float rotation);
 
 	void showBlippySquares(int rownum =2, bool oddBarNumber = true);
-	void showWaveform(float vpos = 0.1, float threshold = 0.4);
+	void showWaveform(float vpos = 0, float threshold = 0, bool useBass = true);
 	void showWooeeyShapes(float voffset = 0, bool oddBarNumber = false );
 	void updateWooeeyShapes();
 	
@@ -157,7 +157,8 @@ class ofApp : public ofBaseApp{
 	float smoothVol;
 	float vol;
 	
-	deque<float> volumes; 
+	deque<float> volumes;
+	deque<float> bassVolumes;
 	
 	AnimationSequence screenAnimation;
 	

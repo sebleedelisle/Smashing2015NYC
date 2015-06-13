@@ -14,7 +14,7 @@
 		<string>github.com:sebleedelisle/openFrameworks.git</string>
 		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
 		<string>github.com:sebleedelisle/openFrameworks.git</string>
-		<key>51E9364AA91F76E6351201E10782ECC7DE6967A1</key>
+		<key>9904CD2432280EC42AC1BF315AE34BADF6CDEB41</key>
 		<string>github.com:sebleedelisle/smashing2015.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
@@ -24,8 +24,8 @@
 		<key>23C64D80E246138DC6585196EEE3D4D57B6455AB</key>
 		<string>../../..</string>
 		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
-		<string>../../..</string>
-		<key>51E9364AA91F76E6351201E10782ECC7DE6967A1</key>
+		<string>../../../../..</string>
+		<key>9904CD2432280EC42AC1BF315AE34BADF6CDEB41</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -33,7 +33,7 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>51E9364AA91F76E6351201E10782ECC7DE6967A1</string>
+	<string>9904CD2432280EC42AC1BF315AE34BADF6CDEB41</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -48,7 +48,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
+			<string>23C64D80E246138DC6585196EEE3D4D57B6455AB</string>
 			<key>IDESourceControlWCCName</key>
 			<string></string>
 		</dict>
@@ -64,7 +64,15 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>51E9364AA91F76E6351201E10782ECC7DE6967A1</string>
+			<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>..</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9904CD2432280EC42AC1BF315AE34BADF6CDEB41</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Smashing2015_NYC</string>
 		</dict>

@@ -11,7 +11,7 @@ void ofApp::setup(){
 	screenWidth = 1280;
 	screenHeight = 960;
 	
-	guideImage.loadImage("img/GuideImageLA.jpg");
+	guideImage.loadImage("img/GuideImageNYC.jpg");
 	music.loadSound("../../../Music/Foolishness.aif");
 
 	
@@ -23,23 +23,22 @@ void ofApp::setup(){
 	
 	svgs.push_back(ofxSVG());
 	svgs.back().load("california.svg");
-	
 	worldMap.load("world map new file.svg");
 	laMap.load("california.svg");
 	
 	previewProjector = true;
 	
-	projectorFbo.allocate(1280, 720, GL_RGB, 0);
+	projectorFbo.allocate(1024, 768, GL_RGB, 0);
 	uiFbo.allocate(screenWidth, screenHeight, GL_RGB, 2); 
 
 	projectorFbo.begin();
 	ofSetColor(0);
-	ofRect(0,0,1280,720);
+	ofRect(0,0,1024,768);
 	projectorFbo.end();
 	
 	ofSetColor(255);
 	//projectorPosition.set(screenWidth/5*2.14, screenHeight*4/5 * 0.99, screenWidth/5, screenHeight/5);
-	projectorPosition.set(460, 327, 370, 213);
+	projectorPosition.set(435, 322, 399, 299);
 	
 	pipeOrganData.init(projectorPosition); 
 	
@@ -213,6 +212,9 @@ void ofApp::draw(){
 	smoothVol += (vol-smoothVol) *0.5;
 	volumes.push_front(smoothVol);
 	if(volumes.size()>500) volumes.pop_back();
+	if((sync.barPulse>0.75) || ( sync.barPulse< 0.4)) bassVolumes.push_front(val[3]);
+	else bassVolumes.push_front(0);
+	if(bassVolumes.size()>500) bassVolumes.pop_back();
 	
 	
 	uiFbo.begin();
@@ -306,7 +308,7 @@ void ofApp::draw(){
 
 	ofFill();
 	ofSetColor(0);
-	ofRect(0,0,1280,720);
+	ofRect(0,0,projectorFbo.getWidth(),projectorFbo.getHeight());
 	ofSetColor(255);
 	
 	//video.draw(0,0,1280,720);
@@ -423,10 +425,11 @@ void ofApp :: drawEffects() {
 	
 	// BIG SQUARES AND THEN WORLD MAP
 
-	if((sync.currentBar>=24) && (sync.currentBar<28)) {
+	if((sync.currentBar>=24) && (sync.currentBar<48)) {
 		// squares
 		resetEffects();
-		
+
+		// This is where the bass comes in.
 		if(sync.currentBar==24) {
 			
 			float totalshapes = 10;
@@ -449,159 +452,47 @@ void ofApp :: drawEffects() {
 			
 			
 		}
-
+		showWaveform(-100, 0.2,true);
 		
 		// world map coming forward with radar lines
 		
-		if(sync.currentBarFloat>24.25) {
+		//if(sync.currentBarFloat>24.25) {
 			
-			// z zoom forward at start
-			float zpos = ofMap(sync.currentBarFloat, 24.25,24.75,-10000,-200,true);// 0;//ofMap(sync.currentBarFloat, 25,27.75,200,600);//1200);
-			
-
-			
-			// scaling up from zero to start
-			float scale = 1;// ofMap(sync.currentBarFloat, 24.25,24.75,0,0.9,true);
-			
-			// xangle increased over time to tilt the world map
-			float xangle = ofMap(sync.currentBarFloat, 25,28,-60,-65, true);
-			
-			// transition in - xpos and ypos set at end
-			float ypos = 400; // ofMap(sync.currentBarFloat, 24.25,24.75,450,450,true);
-			// slow increase in x
-			//float xpos = ofMap(sync.currentBarFloat, 24.25,24.75,645,645,true);
-			float xpos = 645;//
-			
-			
-			// slow increase
-			if( sync.currentBarFloat>24.75) {
-				xpos = ofMap(sync.currentBarFloat,24.75,28,645,745,true);
-				ypos = ofMap(sync.currentBarFloat,24.75,28,400,450,true);
-				
-				zpos = ofMap(sync.currentBarFloat,24.75,28,-200,400,true);
-				
-			}
-
-			
-			
-			float brightness = 1;
-			// make the map fly forward at the end
-			if(sync.currentBarFloat>27.75) {
-				zpos = ofMap(sync.currentBarFloat,27.75,28, 400,1000);
-				
-				brightness = ofMap(sync.currentBarFloat,27.75,28, 1,0);
-				
-			}
-			
-			laserManager.addLaserSVG(worldMap, ofPoint(xpos,ypos, zpos),ofPoint(scale,scale),ofPoint(xangle,0,0), ofPoint(10,-47), brightness );
-		
-			
-			
-			// RADAR LINE
-			
-			ofPoint radarOffset(-145,10,0);
-			
-			if(sync.currentBar>=26) {
-				
-				float rotation = sync.barPulse/2;
-				if(sync.currentBar%2==1) rotation+=0.5;
-				rotation*=PI*2;
-				
-				ofPoint radarEndPoint = ofPoint(sin(rotation)*120, cos(rotation)*80);
-				//ofPoint radarEndPoint2 = ofPoint(sin(rotation)*120, cos(rotation)*80);
-				//radarEndPoint2.rotate(3,ofPoint(0,0,1));
-				
-				radarEndPoint.rotate(-xangle, ofPoint(1,0,0));
-				//radarEndPoint2.rotate(-xangle, ofPoint(1,0,0));
-				
-				laserManager.addLaserLineEased(ofPoint(xpos,ypos,zpos)+ radarOffset, ofPoint(xpos, ypos,zpos) + radarEndPoint+ radarOffset, ofColor(0,100,0));
-				
-				//laserManager.addLaserLineEased(ofPoint(xpos,ypos,zpos), ofPoint(xpos, ypos,zpos) + radarEndPoint2, ofColor::green);
-				
-			}
-		}
+		//}
 
 	}
-	
-	// UK MAP SECTION
-	
-	if((sync.currentBarFloat>=27.75) && (sync.currentBar<32)) {
-		// scaling up from zero to start
-		float scale = 1;//ofMap(sync.currentBarFloat, 24.5,24.75,0,0.5,true);
-		float zpos = ofMap(sync.currentBarFloat, 27.75, 32,100,700);//1200);
-		
-		float xpos = 645;
-		float ypos = 460;
-		
-		
-		// xangle increased over time to tilt the world map
-		float xangle = -60; // ofMap(sync.currentBarFloat, 25,28,-40,-60, true);
-		
-		float brightness = 1;
-		// make the map fly forward at the beginning
-		if((sync.currentBarFloat>27.75) && (sync.currentBarFloat<=28)) {
-			zpos = ofMap(sync.currentBarFloat,27.75,28, -12000,100);
-			brightness = ofMap(sync.currentBarFloat,27.75,28, 0,1);
-			
-		}
-		
-		laserManager.addLaserSVG(laMap, ofPoint(xpos,ypos, zpos),ofPoint(scale, scale),ofPoint(xangle,0,0), ofPoint(14,45), brightness );
-		
-		ofPoint radarOffset(0,10,0);
-		
-		
-		float rotation = sync.barPulse/2;
-		if(sync.currentBar%2==1) rotation+=0.5;
-		rotation*=PI*2;
-		
-		ofPoint radarEndPoint = ofPoint(sin(rotation)*100, cos(rotation)*100);
-		
-		radarEndPoint.rotate(-xangle, ofPoint(1,0,0));
-		
-		laserManager.addLaserLineEased(ofPoint(xpos,ypos,zpos)+radarOffset, ofPoint(xpos, ypos,zpos) + radarEndPoint + radarOffset, ofColor(0,100,0));
 
-		
-	
-
-	
-	}
-
-
-
-	if((sync.currentBarFloat >= 31.875) && (sync.currentBarFloat < 35.5)) {
+	if((sync.currentBarFloat >= 32) && (sync.currentBarFloat < 48)) {
 		resetEffects();
-		
-		if((int)(sync.currentBarFloat+0.125)%2==0) effectPipeOrganLines.setMode(2);
-		
-		
+		if((fmod(sync.currentBarFloat,4)>0.625) && (fmod(sync.currentBarFloat,4)<1.25)) effectPipeOrganLines.setMode(2);
 	}
-	
-	if((sync.currentBar >= 36) && (sync.currentBar < 44)) {
-		resetEffects();
-		
-		if(sync.currentBar%2==0) effectPipeOrganLines.setMode(2);
-		else  showWooeeyShapes((sync.currentBar>=40)?-0.15:0);
-		
-	}
-	
-	if((sync.currentBar >= 44) && (sync.currentBar < 45)) {
-		resetEffects();
-		effectDomeLines.setMode(1);
-		
-	}
-
-	
-	if((sync.currentBar >= 46) && (sync.currentBar < 49)) {
-		resetEffects();
-		
-		//if(sync.currentBar%2==0)
-			effectPipeOrganLines.setMode(2);
-		
-	}
-	if((sync.currentBar >= 45) && (sync.currentBar < 47)) {
-		effectLaserBeams.mode = 3;
-	}
-	
+//
+//	if((sync.currentBar >= 36) && (sync.currentBar < 44)) {
+//		resetEffects();
+//		
+//		if(sync.currentBar%2==0) effectPipeOrganLines.setMode(2);
+//		else  showWooeeyShapes((sync.currentBar>=40)?-0.15:0);
+//		
+//	}
+//	
+//	if((sync.currentBar >= 44) && (sync.currentBar < 45)) {
+//		resetEffects();
+//		effectDomeLines.setMode(1);
+//		
+//	}
+//
+//	
+//	if((sync.currentBar >= 46) && (sync.currentBar < 49)) {
+//		resetEffects();
+//		
+//		//if(sync.currentBar%2==0)
+//			effectPipeOrganLines.setMode(2);
+//		
+//	}
+//	if((sync.currentBar >= 45) && (sync.currentBar < 47)) {
+//		effectLaserBeams.mode = 3;
+//	}
+//	
 	if((sync.currentBar>=49) && (sync.currentBar<61)) {
 		showBlippySquares();
 		if((sync.currentBar>=53) && (sync.currentBar<57) ) showWooeeyShapes(0,true);
@@ -869,53 +760,59 @@ void ofApp :: drawEffects() {
 }
 
 
-void ofApp::showWaveform(float vpos, float threshold) {
-	poly.clear();
+void ofApp::showWaveform(float vpos, float threshold, bool useBass) {
 	
 	float resolution = 0.5;
-	float speed = 20; // lower is faster
+	float speed = 15  ; // lower is faster
 	float numiterations = 90.0f/speed;
-	float size = 0.2; // this is the multiplier for the sin function from -1 to 1
+	float vsize = 60; // this is the multiplier for the sin function from -1 to 1
+	float hsize = 360/90;
 	
-	for(int i = 0; i<speed && i< volumes.size() ; i++) {
-		
-		// this ensures that the wave shrinks as it goes across
-		
-		float scale = ofMap(i, speed*0, speed, 1, 0, true);
-		
-		float volume = ofMap(volumes[i], threshold, 1, 0, 1, true) * scale;
-		for(float j= 0; j<numiterations; j+=resolution) {
-			
-			
-			//poly.addVertex( ofPoint(centre.x - (i*20 + j), centre.y + 100- (sin(j/20.0f*PI*2)* volume )));
-			
-			
-			poly.addVertex(domeData.getPointInDome((sin(j/numiterations*PI*2)*size*volume) +vpos,  -90-(i*(numiterations) + (j))));
-		}
-	}
-	
-	
-	
-	laserManager.addLaserPolyline(poly);
+	ofPoint centre = projectorPosition.getCenter();
 	
 	poly.clear();
 	
+	
+	
+	for(int i = speed-1; i>=0 ; i--) {
+		
+		if(i>=volumes.size()) continue;
+		// this ensures that the wave shrinks as it goes across
+		
+		float scale = ofMap(i, speed*0, speed, 1, 0, true);
+		
+		float volume = ofMap(useBass ? bassVolumes[i] : volumes[i], threshold, 1, 0, 1, true) * scale;
+		
+		
+		
+		for(float j= numiterations-1; j>=0; j-=resolution) {
+			
+			poly.addVertex( centre.x-(i*(numiterations) + (j))*hsize, centre.y + (sin(j/numiterations*PI*2)*vsize*volume) +vpos  );
+		}
+	}
+	
+	
+	
+//	laserManager.addLaserPolyline(poly);
+//
+//	
+//	
+//	poly.clear();
+	
 	for(int i = 0; i<speed && i< volumes.size() ; i++) {
 		
 		// this ensures that the wave shrinks as it goes across
 		
 		float scale = ofMap(i, speed*0, speed, 1, 0, true);
 		
-		float volume = ofMap(volumes[i], threshold, 1, 0, 1, true)*scale;
+		float volume = ofMap(useBass ? bassVolumes[i] : volumes[i], threshold, 1, 0, 1, true)*scale;
 		for(float j= 0; j<numiterations; j+=resolution) {
-			
-			
-			//poly.addVertex( ofPoint(centre.x - (i*20 + j), centre.y + 100- (sin(j/20.0f*PI*2)* volume )));
-			
-			poly.addVertex(domeData.getPointInDome((sin(j/numiterations*PI*2)*size*-volume) +vpos,  -90+(i*(numiterations) + (j))));
+
+			poly.addVertex( centre.x + (i*(numiterations) + (j))*hsize, centre.y + (sin(j/numiterations*PI*2)*vsize*-volume) +vpos  );
 		}
 	}
 	laserManager.addLaserPolyline(poly);
+	
 	
 }
 
