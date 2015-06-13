@@ -97,6 +97,11 @@ void EffectLines :: draw(Synchroniser& sync) {
 	
 	if(sync.currentBar<8) {
 		
+		if(sync.currentBar<4) {
+			kickShape.targetSize = ofMap(sync.currentBarFloat, 0, 4, 1, 0.5);
+			
+		}
+		
 		kickShape.spin = snareShape.spin = sync.currentBarFloat*2;
 		snareShape.enabled = false;
 		guitarShape.enabled = false;
@@ -106,17 +111,18 @@ void EffectLines :: draw(Synchroniser& sync) {
 		snareShape.targetPos.x = 0;
 		kickShape.targetPos.x = 0;
 		
-		if(sync.currentBar>=4) {
-			kickShape.targetPos.x = 20;
-			snareShape.targetPos.x = -20;
-			snareShape.enabled =true;
-		}
+//		if(sync.currentBar>=6) {
+//			kickShape.targetPos.x = 20;
+//			snareShape.targetPos.x = -20;
+//			snareShape.enabled =true;
+//		}
 		
 		
 	}
 	else if(sync.currentBar>=8) {
 		kickShape.spin =  snareShape.spin = (sin(sync.currentBarFloat*2) *5) + 10;
 		guitarShape.enabled = true;
+		snareShape.enabled =true;
 		guitarShape.spin = (cos((sync.currentBarFloat-8)*2) *10) + 18;
 		hihatShape.spin = (cos((sync.currentBarFloat)*2) *5);
 		//guitarShape.pos.x = ofMap(sync.currentBarFloat,8,8.2,0,20, true);

@@ -212,7 +212,7 @@ void ofApp::draw(){
 	smoothVol += (vol-smoothVol) *0.5;
 	volumes.push_front(smoothVol);
 	if(volumes.size()>500) volumes.pop_back();
-	if((sync.barPulse>0.75) || ( sync.barPulse< 0.4)) bassVolumes.push_front(val[3]);
+	if((sync.barPulse>0.75) || ( sync.barPulse< 0.42)) bassVolumes.push_front(val[3]);
 	else bassVolumes.push_front(0);
 	if(bassVolumes.size()>500) bassVolumes.pop_back();
 	
@@ -811,6 +811,7 @@ void ofApp::showWaveform(float vpos, float threshold, bool useBass) {
 			poly.addVertex( centre.x + (i*(numiterations) + (j))*hsize, centre.y + (sin(j/numiterations*PI*2)*vsize*-volume) +vpos  );
 		}
 	}
+	poly.simplify();
 	laserManager.addLaserPolyline(poly);
 	
 	
