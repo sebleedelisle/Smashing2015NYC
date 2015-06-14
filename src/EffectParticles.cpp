@@ -48,17 +48,51 @@ void EffectParticles :: makeParticleForPipe(int pipeindex) {
 	
 }
 
-void EffectParticles:: makeRainbowBurst() {
-	if(pipeOrganData == NULL) return; 
+void EffectParticles:: makeRainbowBurst(ofPoint pos) {
+
+	if(pipeOrganData == NULL) return;
 	
-	float numpipes = pipeOrganData->pipes.size();
+	ParticleSystem &ps = *particleSystemManager.getParticleSystem();
+	
+	ParticleSystemSettings pss;
+	pss.emitLifeTime = 0.1;
+	pss.emitMode = PARTICLE_EMIT_BURST;
+	pss.emitCount = 10;
+	//pss.renderer = new ParticleRendererLaserLine(2);
+	pss.renderer = new ParticleRendererLaser();
+	//pss.renderer = new ParticleRendererShape();
+	pss.speedMin = 1000 ;
+	pss.speedMax = 2000;
+	pss.drag = 0.5;
+	pss.gravity.set(0,500,0);
+	
+	pss.sizeStartMin = pss.sizeStartMax = 1;
+	pss.sizeChangeRatio = 0.1;
+	//pss.emitShape = &explodeMesh;
+	pss.directionYVar = 180;
+//	pss.directionZVar = 0;
+//	pss.directionY = 50;
+//	pss.directionX = 0;
+//	pss.directionZ = 90;
+//	pss.directionXVar = 30;
 	
 	
-	for(int i =0; i<numpipes; i+=1) {
-		makeParticleForPipe(i) ;
-		
-	}
+	pss.hueStartMin = pss.hueStartMax = 0;
+	pss.hueChange = 360;
+	pss.saturationMin = pss.saturationMax = 255;
+	pss.saturationEnd = 255;
+	pss.brightnessStartMin = pss.brightnessStartMax =pss.brightnessEnd = 255;
+	pss.lifeMin = pss.lifeMax = 0.2;
+	pss.shimmerMin = 0;
+	pss.timeSpeed = 1;
+	//pss.doNotScale = true;
 	
+	ps.pos = pos;
+	ps.init(pss);
+	
+	
+	
+
 	
 }
 
@@ -78,13 +112,16 @@ void EffectParticles:: makeStarBurst(float timespeed ) {
 		pss.emitLifeTime = 0.1;
 		//pss.emitMode = PARTICLE_EMIT_BURST;
 		pss.emitCount = 20;
-		pss.renderer = new ParticleRendererLaser();
+	//	pss.renderer = new ParticleRendererLaser();
+		pss.renderer = new ParticleRendererShape();
+		
+		
 		pss.speedMin = 2000 ;
 		pss.speedMax = 2650;
 		pss.drag = 0.90;
 		pss.gravity.set(0,600,0);
 		
-		pss.sizeStartMin = pss.sizeStartMax = 1;
+		pss.sizeStartMin = pss.sizeStartMax = 10;
 		pss.sizeChangeRatio = 0.5;
 		//pss.emitShape = &explodeMesh;
 		pss.directionYVar = pss.directionZVar = 0;

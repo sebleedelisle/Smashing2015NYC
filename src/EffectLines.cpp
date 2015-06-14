@@ -90,6 +90,13 @@ void EffectLines :: draw(Synchroniser& sync) {
 	kickShape.emittingSpikes = false;
 	snareShape.emittingSpikes = false;
 	guitarShape.emittingSpikes = false;
+	
+	hihatShape.rainbows = false;
+	kickShape.rainbows = false;
+	snareShape.rainbows = false;
+	guitarShape.rainbows = false;
+	
+	ofPoint cameraTarget(0,0,0);
 
 	
 	//float yRotation = (ofGetMouseX() - (ofGetWidth()/2));
@@ -119,7 +126,7 @@ void EffectLines :: draw(Synchroniser& sync) {
 		
 		
 	}
-	else if(sync.currentBar>=8) {
+	else if ((sync.currentBar>=8) && ( sync.currentBar<32)) {
 		kickShape.spin =  snareShape.spin = (sin(sync.currentBarFloat*2) *5) + 10;
 		guitarShape.enabled = true;
 		snareShape.enabled =true;
@@ -157,9 +164,45 @@ void EffectLines :: draw(Synchroniser& sync) {
 			guitarShape.emittingSpikes = true;
 			
 		}
-	}
-	
-	else if (false) {
+	} else if((sync.currentBar>=32)&&(sync.currentBar<56)) {
+		
+		camera.setPosition(0,0,ofMap(sync.currentBarFloat, 46, 52, 600,1000,true));
+		camera.rotateAround(ofMap(sync.currentBarFloat, 16, 48, 0, 360), ofVec3f(0,1,0.5).normalize(), ofVec3f(0,0,0));
+		
+//		hihatShape.emittingSpikes = false;
+//		kickShape.emittingSpikes = false;
+//		snareShape.emittingSpikes = false;
+//		guitarShape.emittingSpikes = false;
+		if(sync.currentBar>=48) {
+			hihatShape.rainbows = true;
+			kickShape.rainbows = true;
+			snareShape.rainbows = true;
+			guitarShape.rainbows = true;
+		}
+		
+	} else if((sync.currentBar>=56)&&(sync.currentBar<84)) {
+		// AFTER FIRST CHORUS
+		
+		camera.setPosition(0,0,ofMap(sync.currentBarFloat, 56, 57, 1000,400,true));
+		
+		
+		// FOR COOL CAMERA MOVES
+		//camera.rotateAround(ofMap(sync.currentBarFloat, 56, 64, -10, 360), ofVec3f(0,1,0.1).normalize(), ofVec3f(0,0,500));
+		
+		camera.rotateAround(ofMap(sync.currentBarFloat, 56, 64, -20, 380), ofVec3f(0,1,0.14).normalize(), ofVec3f(0,0,ofMap(sync.currentBarFloat, 64,68,0,500,true)));
+		cameraTarget.z = 40;
+
+		
+		hihatShape.emittingSpikes = true;
+		kickShape.emittingSpikes = true;
+		snareShape.emittingSpikes = true;
+		guitarShape.emittingSpikes = true;
+		hihatShape.rainbows = true;
+		kickShape.rainbows = true;
+		snareShape.rainbows = true;
+		guitarShape.rainbows = true;
+		
+	} else if (false) {
 		
 		
 		
@@ -177,7 +220,7 @@ void EffectLines :: draw(Synchroniser& sync) {
 	
 	
 	
-	camera.lookAt(ofVec3f(0,0,0));
+	camera.lookAt(cameraTarget);
 	
 	
 	
@@ -234,6 +277,7 @@ void EffectLines :: draw(Synchroniser& sync) {
 	ofSetLineWidth(2);
 	ofSetColor(255);
 	ofNoFill();
+	ofEnableBlendMode(OF_BLENDMODE_ADD); 
 	
 	drawShape(kickShape, sync);
 	drawShape(guitarShape, sync);
@@ -254,70 +298,16 @@ void EffectLines:: drawShape(AudioShape& shape, Synchroniser& sync) {
 	
 	if(!shape.enabled) return;
 	
-	ofNoFill();
-	ofDisableSmoothing();
-	ofSetLineWidth(2);
-	
-	ofPushMatrix();
-	ofTranslate(shape.pos);
-
 //	ofRotateY(90);
 	
 
 	if(sync.sixteenthTriggered) {
-		if(shape.sixteens[sync.current16th] >0) {
-			shape.size = shape.sixteens[sync.current16th];
-			shape.addLineSpike();
-		}
+		shape.trigger16th(sync.current16th);
 	}
 	
 	
-	ofPushMatrix();
-	ofRotateZ(shape.rotation);
-	ofScale(shape.masterScale,shape.masterScale);
-	if(shape.points.size()==0) {
-		ofSetCircleResolution(shape.numsides);
-		ofCircle(0,0,0,20 * shape.size);
-	} else {
-		
-		ofScale(20*shape.size, 20*shape.size);
-		ofBeginShape();
-		for(int i = 0; i<shape.points.size(); i++) {
-			ofPoint p = shape.points[i];//ofPoint(ofRandom(-0.05,0.05), ofRandom(-0.05,0.05)) + ;
-			ofVertex(p);
-		}
-		ofEndShape();
-		
-		
-	}
+	shape.draw();
 	
-	ofPopMatrix();
-	
-	ofSetLineWidth(1);
-	deque<LineSpike> &spikes = shape.spikes;
-	ofBeginShape();
-	ofVertex(0,0,0);
-	for (int i = spikes.size()-1; i>=0; i-- ) {
-		LineSpike&spike = spikes[i];
-	
-		ofVertex(spike.position);
-		
-		int z =0;
-		for(z = 1; z<7; z++) {
-		
-			ofPoint p =ofPoint(spike.position.x , spike.position.y + ((abs((z%2)-1)-0.5)*4) , spike.position.z + (z*4));
-			p+= (ofPoint(ofRandom(-1,1), ofRandom(-1,1), ofRandom(-1,1)) *0.5);
-			
-			ofVertex(p);
-		}
-	
-		ofVertex(spike.position.x , spike.position.y , spike.position.z + (z*4));
-		
-	
-	}
-	ofEndShape();
-		
-	ofPopMatrix();
 	
 }
 

@@ -25,6 +25,7 @@ class LineSpike {
 	
 	bool enabled = true;
 	
+	
 	vector<ofPoint> graphics;
 	
 	// TODO should probably take into account the delta time
@@ -57,6 +58,7 @@ class AudioShape {
 	
 	void update() {
 		
+		counter ++;
 		
 		rotation += spin;
 		size += ((targetSize - size) * sizeChangeSpeed);
@@ -77,6 +79,91 @@ class AudioShape {
 		while((spikes.size()>0) &&(!spikes.front().enabled)) spikes.pop_front();
 	}
 	
+	
+	void draw() {
+		
+		
+		
+		ofNoFill();
+		
+		ofPushMatrix();
+		ofTranslate(pos);
+
+		ofDisableSmoothing();
+		
+		ofColor col;
+		
+		if(rainbows) {
+			
+			ofSetLineWidth(size*5);
+			col.setHsb((int)rotation%255, 250,255);
+			
+		}else {
+			col.setHsb(0,0,255);
+			ofSetLineWidth(2);
+		}
+		
+		ofSetColor(col);
+		
+		ofPushMatrix();
+		ofRotateZ(rotation);
+		ofScale(masterScale,masterScale);
+		if(points.size()==0) {
+			ofSetCircleResolution(numsides);
+			ofCircle(0,0,0,20 * size);
+		} else {
+			
+			ofScale(20*size, 20*size);
+			ofBeginShape();
+			for(int i = 0; i<points.size(); i++) {
+				ofPoint p = points[i];//ofPoint(ofRandom(-0.05,0.05), ofRandom(-0.05,0.05)) + ;
+				ofVertex(p);
+			}
+			ofEndShape();
+			
+			
+		}
+		
+		ofPopMatrix();
+
+		ofSetLineWidth(1);
+		//deque<LineSpike> &spikes = shape.spikes;
+		ofBeginShape();
+		ofVertex(0,0,0);
+		for (int i = spikes.size()-1; i>=0; i-- ) {
+			LineSpike&spike = spikes[i];
+			
+			ofVertex(spike.position);
+			
+			int z =0;
+			for(z = 1; z<7; z++) {
+				
+				ofPoint p =ofPoint(spike.position.x , spike.position.y + ((abs((z%2)-1)-0.5)*4) , spike.position.z + (z*4));
+				p+= (ofPoint(ofRandom(-1,1), ofRandom(-1,1), ofRandom(-1,1)) *0.5);
+				
+				ofVertex(p);
+			}
+			
+			ofVertex(spike.position.x , spike.position.y , spike.position.z + (z*4));
+			
+			
+		}
+		ofEndShape();
+		
+		ofPopMatrix();
+		
+	}
+	
+	void trigger16th(int sixteenth) {
+		
+		if(sixteenth>=sixteens.size()) return;
+		
+		if(sixteens[sixteenth] >0) {
+			size = sixteens[sixteenth];
+			addLineSpike();
+		}
+		
+	}
 	void addLineSpike() {
 		if(!emittingSpikes) return;
 		spikes.push_back(LineSpike());
@@ -100,6 +187,10 @@ class AudioShape {
 	bool enabled  = false;
 	
 	bool emittingSpikes = false;
+	
+	bool rainbows = false;
+	
+	int counter = 0;
 	
 	float size = 0.5;
 	float targetSize = 0.5;

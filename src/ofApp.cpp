@@ -400,7 +400,7 @@ void ofApp::draw(){
 	
 	uiFbo.end();
 	uiFbo.draw(0,0);
-	
+	ofEnableSmoothing();
 	projectorFbo.draw(secondScreenRect); 
 	
 	// GUI PANELS
@@ -509,11 +509,13 @@ void ofApp :: drawEffects() {
 		float moveSpeed = 2;
 		
 		
-		int highlight = (1-sync.beatPulse) * numRings;
+		//int highlight = (1-sync.beatPulse) * numRings;
 		
 		for(int i = 0; i<numRings; i++) {
 		
-			float rotation = (i+sync.currentBar)%2==0 ? sync.currentBarFloat*moveSpeed : -sync.currentBarFloat*moveSpeed;
+			bool reverse = (i+sync.currentBar)%2==0;
+			
+			float rotation =  reverse ? sync.currentBarFloat*moveSpeed : -sync.currentBarFloat*moveSpeed;
 			rotation*=rotationSpeed;
 			float z = ofMap(i, 0, numRings, zMin, zMax);
 			float x = size;
@@ -524,7 +526,12 @@ void ofApp :: drawEffects() {
 			poly.clear();
 			
 			for(float angle = 0; angle<=360.01; angle+=(360.0f/numSides)) {
-				ofPoint p(x, 0, z);
+				ofPoint p(x + (reverse ? 0:10), 0, z);
+				p.rotate(angle + rotation, ofPoint(0,0,1));
+				p+=centre;
+				poly.addVertex(p);
+				
+				p.set(x+ (reverse ? 10:0), 0, z);
 				p.rotate(angle + rotation, ofPoint(0,0,1));
 				p+=centre;
 				poly.addVertex(p);
@@ -536,9 +543,9 @@ void ofApp :: drawEffects() {
 			if(z<zMin+100) b =ofMap(z, zMin, zMin+100, 0,255);
 			b*=fade;
 			float s = 255;
-			if(i==highlight) s = 0;
+			//if(i==highlight) s = 0;
 			
-			col.setHsb((int)((z*0.1)+(sync.currentBarFloat*1000))%255, s,b);
+			col.setHsb((int)((z*0.5)+(sync.currentBarFloat*1000))%255, s,b);
 			laserManager.addLaserPolyline(poly, col);
 			
 			
@@ -684,7 +691,7 @@ void ofApp :: drawEffects() {
 	 
 	 */
 	
-	float clapsStart = 88;
+	float clapsStart = 84;
 	screenAnimation.clapsStart = clapsStart;
 	float clapsLength = 89.1 - 61;
 	float clapsEnd = clapsStart+clapsLength;
@@ -788,15 +795,37 @@ void ofApp :: drawEffects() {
 		}
 		
 		
-		float latency = 0.05;
-		float xrotation = -10;
+		float latency = 0;//0.05;
+		float xrotation = -15;
+		
+		ofPoint leftPos (-100,100);
+		ofPoint rightPos (100,100);
+		
+		ofPoint left(-150,leftPos.y,0);
+		ofPoint right(150,rightPos.y,0);
+		ofPoint bottomleft(-150,leftPos.y,40);
+		ofPoint bottomright(150,rightPos.y,40);
+		left.rotate(xrotation, ofPoint(1,0,0));
+		right.rotate(xrotation, ofPoint(1,0,0));
+		bottomleft.rotate(xrotation, ofPoint(1,0,0));
+		bottomright.rotate(xrotation, ofPoint(1,0,0));
+		left+=centre;
+		right+=centre;
+		bottomleft+=centre;
+		bottomright+=centre;
+		
+		
+		
+		laserManager.addLaserLineEased(left, right, ofColor::cyan);
+		laserManager.addLaserLineEased(bottomleft, bottomright, ofColor::cyan);
 		
 		for (int i = 0; i<clapsLeft.size(); i++) {
 			float clap = clapsLeft[i];
 			
 			if((sync.eighthTriggered) && (sync.currentBar + ((float)sync.current8th / 8.0f) == clap)) {
 		
-				effectPipeOrganLines.pulseSide(true, ofColor::cyan);
+				//effectPipeOrganLines.pulseSide(true, ofColor::cyan);
+				effectParticles.makeRainbowBurst(left + ofPoint(50,0));
 			}
 			
 			clap-=latency;
@@ -804,11 +833,27 @@ void ofApp :: drawEffects() {
 			if((sync.currentBarFloat+1 > clap) && (sync.currentBarFloat<clap)) {
 				
 				float t = ofMap(clap, sync.currentBarFloat+1, sync.currentBarFloat, 0, 1);
-				ofPoint pos(-100,50,ofMap(t,0,1,-2000,0));
+				ofPoint pos(leftPos.x,leftPos.y,ofMap(t,0,1,-3000,0));
+				
 				pos.rotate(xrotation,ofPoint(1,0,0));
 				pos += centre;
 				
-				laserManager.addLaserCircle(pos, ofColor::cyan, 20);
+				poly.clear();
+				for (int i = 0; i<=16; i++) {
+					float angle = ofMap(i, 0, 16,0,360);
+					ofPoint p(0,0,-20);
+					p.rotate(angle, ofPoint(0,1,0));
+					p.z*=3;
+					p.rotate(xrotation, ofPoint(1,0,0));
+					p+=pos;
+					poly.addVertex(p);
+					
+					
+				}
+				
+				ofColor col;
+				col.setHsb((int)(pos.z+2000)%255,240,255);
+				laserManager.addLaserPolyline(poly, col);
 				
 			}
 			
@@ -818,22 +863,37 @@ void ofApp :: drawEffects() {
 			float clap = clapsRight[i];
 			
 			if((sync.eighthTriggered) && (sync.currentBar + ((float)sync.current8th / 8.0f) == clap)) {
-				
-				effectPipeOrganLines.pulseSide(false, ofColor::cyan);
+				effectParticles.makeRainbowBurst(right - ofPoint(50,0));
+				//effectPipeOrganLines.pulseSide(false, ofColor::cyan);
 			}
 			
 			clap-=latency;
 			
-			if((sync.currentBarFloat+1 > clap) && (sync.currentBarFloat<clap)) {
+			if((sync.currentBarFloat+1.2 > clap) && (sync.currentBarFloat-0.0<clap)) {
 				
 				float t = ofMap(clap, sync.currentBarFloat+1, sync.currentBarFloat, 0, 1);
 				//ofPoint pos = domeData.getPointInDome(0.06, 180 + (t*rotationDistance));
 				
-				ofPoint pos(100,50,ofMap(t,0,1,-3000,0));
+				ofPoint pos(rightPos.x,rightPos.y,ofMap(t,0,1,-3000,0));
 				pos.rotate(xrotation,ofPoint(1,0,0));
 				pos += centre;
 				
-				laserManager.addLaserCircle(pos, ofColor::cyan, 20);
+				poly.clear();
+				for (int i = 0; i<=16; i++) {
+					float angle = ofMap(i, 0, 16,0,360);
+					ofPoint p(0,0,-20);
+					p.rotate(angle, ofPoint(0,1,0));
+					p.z*=3;
+					p.rotate(xrotation, ofPoint(1,0,0));
+					p+=pos;
+					poly.addVertex(p);
+					
+					
+				}
+				
+				ofColor col;
+				col.setHsb((int)(pos.z+2000)%255,240,255);
+				laserManager.addLaserPolyline(poly, col);
 				
 			}
 			

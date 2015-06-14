@@ -43,7 +43,7 @@ class ofApp : public ofBaseApp{
 
 	public:
 	
-	ofApp() : particleSystemManager(*ParticleSystemManager::instance()){
+	ofApp() : particleSystemManager(*ParticleSystemManager::instance()), laserManager(*LaserManager::instance()){
 	};
 	
 	void setup();
@@ -113,7 +113,7 @@ class ofApp : public ofBaseApp{
 	ofParameter<bool> showGuideImage;
 	ofParameter<bool> showBands; 
 	
-	LaserManager laserManager;
+	LaserManager& laserManager;
 	ParticleSystemManager& particleSystemManager;
 	
 	ofFbo projectorFbo;
