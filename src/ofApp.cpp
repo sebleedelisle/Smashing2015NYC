@@ -861,7 +861,7 @@ void ofApp :: drawEffects() {
 	
 	float clapsStart = 88;
 	screenAnimation.clapsStart = clapsStart;
-	float clapsLength = 89.1 - 61;
+	float clapsLength = 89.1 - 61 +8;
 	float clapsEnd = clapsStart+clapsLength;
 	
 	if((sync.currentBar>=clapsStart) && (sync.currentBarFloat<clapsEnd)) {
