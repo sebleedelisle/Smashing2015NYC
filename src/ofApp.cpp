@@ -387,9 +387,9 @@ void ofApp::draw(){
 		if(sync.currentBarFloat<0.5)
 			ofSetColor(ofMap(sync.currentBarFloat, 0,0.5,0,255,true));
 		else
-			ofSetColor(ofMap(sync.currentBarFloat, 4,6,255,0,true));
+			ofSetColor(ofMap(sync.currentBarFloat, 1.5,4,255,0,true));
 	
-		ofTranslate(-smashingTitle.getWidth()/2, -smashingTitle.getHeight()/2, ofMap(sync.currentBarFloat, 0, 8, -600,-100));
+		ofTranslate(-smashingTitle.getWidth()/2, -smashingTitle.getHeight()/2, ofMap(sync.currentBarFloat, 0, 4, -600,0));
 		
 		smashingTitle.draw(0,0);
 		ofPopMatrix();
