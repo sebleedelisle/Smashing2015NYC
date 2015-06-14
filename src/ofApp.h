@@ -14,6 +14,7 @@
 #include "DomeData.h"
 #include "EffectLaserBeams.h"
 #include "EffectLines.h"
+#include "EffectGrowingShapes.h"
 
 #include "AnimationSequence.h"
 #include "EffectDomeLines.h"
@@ -126,6 +127,7 @@ class ofApp : public ofBaseApp{
 	EffectParticles effectParticles;
 	
 	EffectLines effectLines;
+	EffectGrowingShapes effectGrowingShapes; 
 	
 	ClappyBird clappyBird;
 	ofSoundStream soundStream;

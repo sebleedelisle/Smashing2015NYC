@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		12168B4A1AEE4F740087C53D /* LaserManagerAnaglyphic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12168B491AEE4F740087C53D /* LaserManagerAnaglyphic.cpp */; };
 		12253C6218B3FA1900670880 /* TextWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12253C5F18B3FA1900670880 /* TextWriter.cpp */; };
+		12390D021B2CD63E00F5E449 /* EffectGrowingShapes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12390D001B2CD63E00F5E449 /* EffectGrowingShapes.cpp */; };
 		125001BF1B204E9C002A2BC9 /* EffectLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 125001BD1B204E9C002A2BC9 /* EffectLines.cpp */; };
 		12713DE518D46ED400C97118 /* AnimationSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12713DE318D46ED400C97118 /* AnimationSequence.cpp */; };
 		12713DE818D4A7A900C97118 /* EffectDomeLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12713DE618D4A7A800C97118 /* EffectDomeLines.cpp */; };
@@ -150,6 +151,8 @@
 		12253C5F18B3FA1900670880 /* TextWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextWriter.cpp; sourceTree = "<group>"; };
 		12253C6018B3FA1900670880 /* TextWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextWriter.h; sourceTree = "<group>"; };
 		12253C6118B3FA1900670880 /* VectorFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorFont.h; sourceTree = "<group>"; };
+		12390D001B2CD63E00F5E449 /* EffectGrowingShapes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectGrowingShapes.cpp; sourceTree = "<group>"; };
+		12390D011B2CD63E00F5E449 /* EffectGrowingShapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectGrowingShapes.h; sourceTree = "<group>"; };
 		125001BD1B204E9C002A2BC9 /* EffectLines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectLines.cpp; sourceTree = "<group>"; };
 		125001BE1B204E9C002A2BC9 /* EffectLines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectLines.h; sourceTree = "<group>"; };
 		12713DE318D46ED400C97118 /* AnimationSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationSequence.cpp; sourceTree = "<group>"; };
@@ -562,6 +565,8 @@
 				12A346DA18D7FE8700CF070C /* ClappyBird.h */,
 				125001BD1B204E9C002A2BC9 /* EffectLines.cpp */,
 				125001BE1B204E9C002A2BC9 /* EffectLines.h */,
+				12390D001B2CD63E00F5E449 /* EffectGrowingShapes.cpp */,
+				12390D011B2CD63E00F5E449 /* EffectGrowingShapes.h */,
 			);
 			name = Effects;
 			sourceTree = "<group>";
@@ -1646,6 +1651,7 @@
 				12713E2318D5191600C97118 /* SoundPlayer.cpp in Sources */,
 				12713E4C18D5192E00C97118 /* Particle.cpp in Sources */,
 				12713E4D18D5192E00C97118 /* ParticleFactory.cpp in Sources */,
+				12390D021B2CD63E00F5E449 /* EffectGrowingShapes.cpp in Sources */,
 				12713E4E18D5192E00C97118 /* ParticleSystem.cpp in Sources */,
 				12713E4F18D5192E00C97118 /* ParticleSystemManager.cpp in Sources */,
 				12713E5018D5192E00C97118 /* PhysicsObject.cpp in Sources */,

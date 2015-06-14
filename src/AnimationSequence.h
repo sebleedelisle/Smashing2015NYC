@@ -38,8 +38,9 @@ class AnimationSequence {
     
     AnimationSequence();
 	
-	deque<float> volumes; 
-    
+	deque<float> volumes;
+	
+    float clapsStart = 61;
 	
 	
 	

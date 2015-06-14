@@ -99,7 +99,10 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 //        writeinPNL("#SMASHINGCONF");
 //        
 //    }
-    
+	
+	
+	bar -=(clapsStart - 61);
+	
     if (bar >= 61.0 && bar < 62.5) {
         //fade in text
         float progress = ofMap(barfloat, 61, 61.25, 0,255);
@@ -198,6 +201,8 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 		writeinPNL("ALTERNATING!");
 	}
 	
+	
+	/*
 	if (barfloat > 90 && barfloat < 100 ) {
 		
 		        float progress = ofMap(barfloat, 76, 78, 0, 255);
@@ -216,7 +221,7 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 		
 		        ofPopMatrix();
 		    
-	}
+	}*/
 	
 	
 	

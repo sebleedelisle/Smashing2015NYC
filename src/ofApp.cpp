@@ -26,7 +26,7 @@ void ofApp::setup(){
 	worldMap.load("world map new file.svg");
 	laMap.load("california.svg");
 	
-	previewProjector = true;
+	previewProjector = false;
 	
 	projectorFbo.allocate(1024, 768, GL_RGB, 0);
 	uiFbo.allocate(screenWidth, screenHeight, GL_RGB, 2); 
@@ -218,7 +218,7 @@ void ofApp::draw(){
 	
 	
 	uiFbo.begin();
-	ofSetupScreenPerspective(screenWidth,screenHeight,50);
+//	ofSetupScreenPerspective(screenWidth,screenHeight,50);
 
 	ofSetColor(0);
 	ofFill(); 
@@ -246,7 +246,7 @@ void ofApp::draw(){
 				} 
 			}
 		}
-		ofSetupScreenPerspective(screenWidth,screenHeight,50);
+		//ofSetupScreenPerspective(screenWidth,screenHeight,50);
 
 		domeData.draw();
 		
@@ -319,7 +319,7 @@ void ofApp::draw(){
 	
 	
 	ofPushMatrix();
-	ofTranslate(640,360);
+	ofTranslate(projectorFbo.getWidth()/2,projectorFbo.getHeight()/2);
 	
 	// draw wordparticles
 	for(int i = 0; i<wordParticles.size(); i++) {
@@ -360,14 +360,15 @@ void ofApp::draw(){
 	ofPopMatrix();
 	
 	uiFbo.begin();
-	ofSetupScreenPerspective(screenWidth,screenHeight,50);
+	//ofSetupScreenPerspective(screenWidth,screenHeight,50);
 
 
 	
 	// EFFECTS ---------------------------------------------
 	
 	drawEffects();
-    
+	effectGrowingShapes.draw(sync, smoothVol, laserManager);
+
     //if(ofGetElapsedTimef() / 0.8f > svgCounter) {
     //    svgCounter++;
         
@@ -384,7 +385,9 @@ void ofApp::draw(){
 	
 	showNotes();
 	
-	
+//	ofSetupScreenPerspective(screenWidth,screenHeight,50);
+	//laserManager.addLaserCircle(ofPoint(640,480, ofGetElapsedTimef()*50), ofColor::red, 20);
+
 	laserManager.draw();
 	laserManager.renderLaserPreview = !previewProjector; 
 	if(!previewProjector) {
@@ -414,6 +417,10 @@ void ofApp::draw(){
 void ofApp :: drawEffects() {
 	
 	resetEffects();
+	
+	ofPoint centre(screenWidth/2, screenHeight/2);
+
+	
 	//showWooeeyShapes();
 	//showWaveform();
 	
@@ -444,7 +451,7 @@ void ofApp :: drawEffects() {
 			for(int i = startshapes; i<endshapes; i++) {
 				
 				float z = ofMap(i, 0, 10, -500, 500);
-				laserManager.addLaserRectEased(ofPoint(640,480, z) + (ofPoint(-400,-100)*1), ofPoint(800,200)*1, ofColor::white);
+				laserManager.addLaserRectEased(ofPoint(640,320 + ofMap(i, 0, 10, 0, 160), z) + (ofPoint(-400,-100)*1), ofPoint(800,200)*1, ofColor::white);
 				
 			}
 
@@ -466,6 +473,84 @@ void ofApp :: drawEffects() {
 		resetEffects();
 		if((fmod(sync.currentBarFloat,4)>0.625) && (fmod(sync.currentBarFloat,4)<1.25)) effectPipeOrganLines.setMode(2);
 	}
+	
+	
+	//CHORUS
+	
+	if((sync.currentBarFloat>=47) && (sync.currentBarFloat<56.25)) {
+		
+		resetEffects();
+		
+		float progress = ofMap(sync.currentBarFloat, 48, 56, 0,1);
+		
+		float numRings = 6;
+		float zMin = -100,
+			  zMax = 600;
+		
+		// transitions!
+		
+		float fade = 1;
+		if(sync.currentBarFloat<48) {
+			zMin = ofMap(sync.currentBarFloat, 47,48,-10000,zMin);
+			zMax = ofMap(sync.currentBarFloat, 47,48,-5000,zMax);
+			
+			fade = ofMap(sync.currentBarFloat, 47,47.5,0,1, true);
+		} else if(sync.currentBarFloat>56) {
+			zMin = ofMap(sync.currentBarFloat, 56,56.25,zMin, 600);
+			zMax = ofMap(sync.currentBarFloat, 56,56.25,zMax, 600);
+			
+		}
+		
+		
+		float size = 100;
+		float numSides = 9;
+		float rotationSpeed = 100;
+		ofColor col ;
+		float moveSpeed = 2;
+		
+		
+		int highlight = (1-sync.beatPulse) * numRings;
+		
+		for(int i = 0; i<numRings; i++) {
+		
+			float rotation = (i+sync.currentBar)%2==0 ? sync.currentBarFloat*moveSpeed : -sync.currentBarFloat*moveSpeed;
+			rotation*=rotationSpeed;
+			float z = ofMap(i, 0, numRings, zMin, zMax);
+			float x = size;
+			x+=ofMap(fmod(sync.beatPulse + ((float)i * 0.05), 1), 0.75,1,0,2, true);
+			
+			z+=(1-(fmod(sync.barPulse, 1.0f/moveSpeed))*moveSpeed)*(zMax-zMin)/numRings;
+			
+			poly.clear();
+			
+			for(float angle = 0; angle<=360.01; angle+=(360.0f/numSides)) {
+				ofPoint p(x, 0, z);
+				p.rotate(angle + rotation, ofPoint(0,0,1));
+				p+=centre;
+				poly.addVertex(p);
+				
+			}
+			
+			float b = 255;
+			if(z>zMax-100) b = ofMap(z, zMax-100, zMax, 255,0);
+			if(z<zMin+100) b =ofMap(z, zMin, zMin+100, 0,255);
+			b*=fade;
+			float s = 255;
+			if(i==highlight) s = 0;
+			
+			col.setHsb((int)((z*0.1)+(sync.currentBarFloat*1000))%255, s,b);
+			laserManager.addLaserPolyline(poly, col);
+			
+			
+			
+			
+		}
+		
+	}
+
+	
+	
+	
 //
 //	if((sync.currentBar >= 36) && (sync.currentBar < 44)) {
 //		resetEffects();
@@ -493,18 +578,18 @@ void ofApp :: drawEffects() {
 //		effectLaserBeams.mode = 3;
 //	}
 //	
-	if((sync.currentBar>=49) && (sync.currentBar<61)) {
-		showBlippySquares();
-		if((sync.currentBar>=53) && (sync.currentBar<57) ) showWooeeyShapes(0,true);
-		
-	}
-	
-	if((sync.currentBar >=57) && (sync.currentBar< 61) ) {
-		
-		showWaveform();
-		
-		
-	}
+//	if((sync.currentBar>=49) && (sync.currentBar<61)) {
+//		showBlippySquares();
+//		if((sync.currentBar>=53) && (sync.currentBar<57) ) showWooeeyShapes(0,true);
+//		
+//	}
+//	
+//	if((sync.currentBar >=57) && (sync.currentBar< 61) ) {
+//		
+//		showWaveform();
+//		
+//		
+//	}
 	/*
 	if((sync.currentBar>=28) && (sync.currentBar<30)) {
 		
@@ -599,13 +684,17 @@ void ofApp :: drawEffects() {
 	 
 	 */
 	
+	float clapsStart = 88;
+	screenAnimation.clapsStart = clapsStart;
+	float clapsLength = 89.1 - 61;
+	float clapsEnd = clapsStart+clapsLength;
 	
-	if((sync.currentBar>=61) && (sync.currentBarFloat<89.1)) {
+	if((sync.currentBar>=clapsStart) && (sync.currentBarFloat<clapsEnd)) {
 		
 		float rotationDistance = 66;
-		effectPipeOrganLines.lightSide(true, ofColor(0,200,200));
-		effectPipeOrganLines.lightSide(false, ofColor(0,200,200));
-		
+//		effectPipeOrganLines.lightSide(true, ofColor(0,200,200));
+//		effectPipeOrganLines.lightSide(false, ofColor(0,200,200));
+//		
 		
 		// 61 - 62 - get ready
 		// 63 - 64 - clap when circle hits pipe
@@ -691,8 +780,16 @@ void ofApp :: drawEffects() {
 		clapsRight.push_back(88.875);
 		clapsRight.push_back(89);
 		
+		for(int i = 0; i<clapsLeft.size(); i++) {
+			clapsLeft[i] += clapsStart-61;
+		}
+		for(int i = 0; i<clapsRight.size(); i++) {
+			clapsRight[i] += clapsStart-61;
+		}
+		
 		
 		float latency = 0.05;
+		float xrotation = -10;
 		
 		for (int i = 0; i<clapsLeft.size(); i++) {
 			float clap = clapsLeft[i];
@@ -707,8 +804,9 @@ void ofApp :: drawEffects() {
 			if((sync.currentBarFloat+1 > clap) && (sync.currentBarFloat<clap)) {
 				
 				float t = ofMap(clap, sync.currentBarFloat+1, sync.currentBarFloat, 0, 1);
-				ofPoint pos = domeData.getPointInDome(0.06, t*-rotationDistance);
-				
+				ofPoint pos(-100,50,ofMap(t,0,1,-2000,0));
+				pos.rotate(xrotation,ofPoint(1,0,0));
+				pos += centre;
 				
 				laserManager.addLaserCircle(pos, ofColor::cyan, 20);
 				
@@ -729,8 +827,11 @@ void ofApp :: drawEffects() {
 			if((sync.currentBarFloat+1 > clap) && (sync.currentBarFloat<clap)) {
 				
 				float t = ofMap(clap, sync.currentBarFloat+1, sync.currentBarFloat, 0, 1);
-				ofPoint pos = domeData.getPointInDome(0.06, 180 + (t*rotationDistance));
+				//ofPoint pos = domeData.getPointInDome(0.06, 180 + (t*rotationDistance));
 				
+				ofPoint pos(100,50,ofMap(t,0,1,-3000,0));
+				pos.rotate(xrotation,ofPoint(1,0,0));
+				pos += centre;
 				
 				laserManager.addLaserCircle(pos, ofColor::cyan, 20);
 				
@@ -745,9 +846,9 @@ void ofApp :: drawEffects() {
 		
 	}
 	
-	if((sync.currentBar>=89)&&(sync.currentBar<90)) {
-		showWaveform(0.1,0);
-	}
+//	if((sync.currentBar>=89)&&(sync.currentBar<90)) {
+//		showWaveform(0.1,0);
+//	}
 	
 	particleSystemManager.draw();
 	effectLaserBeams.draw(laserManager,smoothVol);
@@ -937,6 +1038,7 @@ void ofApp::resetEffects() {
 	effectPipeOrganLines.setMode(0);
 	effectLaserBeams.mode = 0;
 	effectDomeLines.setMode(0);
+	//effectGrowingShapes.enabled = false;
 	
 }
 
@@ -1404,4 +1506,56 @@ void ofApp :: showNotes() {
 	
 	
 }
+
+
+
+/*
+ 
+ //THIS CODE MAKES A SPIRAL COMING FORWARD
+ 
+ poly.clear();
+ 
+ float	numTurns = 10,
+ startAngle = 0,
+ endAngle = startAngle + (360*numTurns),
+ currentAngle = startAngle,
+ minRadius = 50, maxRadius = 55,
+ rotateSpeed = 40,
+ zPerTurn = 90,
+ minZ = -200, maxZ = minZ + (zPerTurn*numTurns);
+ 
+ 
+ ColourSystemGradient* grad = new ColourSystemGradient();
+ 
+ 
+ 
+ while (currentAngle<=endAngle) {
+ 
+ float progress = ofMap(currentAngle, startAngle, endAngle, 0, 1,true);
+ 
+ 
+ float z = ofMap(progress, 0, 1, minZ, maxZ) + ((1-sync.barPulse) * zPerTurn);
+ ofPoint pos(ofMap(progress, 0, 1, minRadius, maxRadius), 0, z);
+ 
+ //pos.rotate(currentAngle + (sync.barPulse*360), ofPoint(0,0,1));
+ pos.rotate(currentAngle , ofPoint(0,0,1));
+ pos+=centre;
+ 
+ //rotateSpeed = ofMap(currentAngle, 1, 45,0,maxSpeed, true);
+ // should be a setting!
+ currentAngle+=rotateSpeed;
+ 
+ float b = 255;//ofMap(progress, 0, 1, 255, 0, true);
+ ofColor col;
+ col.setHsb((int)z%255, 255, b);
+ 
+ poly.addVertex(pos);
+ // yeah this isn't really gonna work is it. :( Grad works on length of line
+ grad->addColourStop(col, ofMap(progress, 0, 1, 0, 1));
+ 
+ 
+ }
+ poly.simplify();
+ laserManager.addLaserPolyline(poly, grad);
+*/
 
