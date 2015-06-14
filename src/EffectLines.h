@@ -99,7 +99,7 @@ class AudioShape {
 			col.setHsb((int)rotation%255, 250,255);
 			
 		}else {
-			col.setHsb(0,0,255);
+			col = colour;
 			ofSetLineWidth(2);
 		}
 		
@@ -183,6 +183,8 @@ class AudioShape {
 	ofPoint pos = ofPoint(0,0,0);
 	ofPoint targetPos = ofPoint(0,0,0);
 	ofPoint vel = ofPoint(0,0,0);
+	
+	ofColor colour = ofColor::white;
 	
 	bool enabled  = false;
 	

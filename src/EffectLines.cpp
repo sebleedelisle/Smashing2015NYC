@@ -104,6 +104,11 @@ void EffectLines :: draw(Synchroniser& sync) {
 	
 	if(sync.currentBar<8) {
 		
+		if(sync.currentBarFloat<0.5) {
+			kickShape.colour = ofColor(ofMap(sync.currentBarFloat, 0, 0.5, 0,255));
+		} else {
+			kickShape.colour = ofColor(255);
+		}
 		if(sync.currentBar<4) {
 			kickShape.targetSize = ofMap(sync.currentBarFloat, 0, 4, 1, 0.5);
 			

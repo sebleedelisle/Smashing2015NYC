@@ -87,8 +87,9 @@ void ofApp::setup(){
 	
 	appGui.add(stageOutlinePosition.set("stage outline pos",centre, ofPoint(0,0, -1000),ofPoint(screenWidth, screenHeight, 1000) ));
 	appGui.add(stageOutlineRotation.set("stage rotation",ofPoint(0,0), ofPoint(-10,-10,-10),ofPoint(10,10,10) ));
-	appGui.add(stageOutlineScale.set("stage scale",ofPoint(1,1,1), ofPoint(0.2,0.2,0.2),ofPoint(2,2,2) ));
-
+	appGui.add(stageOutlineScale.set("stage scale",ofPoint(1,1,1), ofPoint(0.2,0.2,0.2),ofPoint(1,1,1) ));
+	appGui.add(stageOutlineLockScaleAspect.set("lock aspect", true));
+	
 	
 	redGui.setup("Laser Red", "laserred.xml");
 	redGui.add(laserManager.redParams );
@@ -106,7 +107,12 @@ void ofApp::setup(){
 	greenGui.setVisible(false);
 	blueGui.setVisible(false);
 	
-	//appGui.load();
+	appGui.load();
+	// app defaults :
+	pipeOrganData.editable = false;
+	laserDomePoints = false;
+	showBands = false;
+	
 	panels.push_back(&appGui);
 
 	
@@ -152,6 +158,12 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	
+	if(stageOutlineLockScaleAspect) {
+		stageOutlineScale.set(ofPoint(stageOutlineScale->x, stageOutlineScale->x, stageOutlineScale->x));
+//		stageOutlineScale->y = *stageOutlineScale->z = stageOutlineScale->x;
+	}
+
 	
 	TimingNote note = (TimingNote) {10.0f, 4.0f, "Intro"};
 	
@@ -368,9 +380,12 @@ void ofApp::draw(){
 		ofTranslate(-6,-20);
 		ofScale(scale, scale);
 		
-		ofSetColor(ofMap(sync.currentBarFloat, 4,6,255,0,true));
+		if(sync.currentBarFloat<0.5)
+			ofSetColor(ofMap(sync.currentBarFloat, 0,0.5,0,255,true));
+		else
+			ofSetColor(ofMap(sync.currentBarFloat, 4,6,255,0,true));
 	
-		ofTranslate(-smashingTitle.getWidth()/2, -smashingTitle.getHeight()/2, ofMap(sync.currentBarFloat, 0, 8, -600,-200));
+		ofTranslate(-smashingTitle.getWidth()/2, -smashingTitle.getHeight()/2, ofMap(sync.currentBarFloat, 0, 8, -600,-100));
 		
 		smashingTitle.draw(0,0);
 		ofPopMatrix();
@@ -781,6 +796,8 @@ void ofApp :: drawEffects() {
 		clapsRight.push_back(79.75);
 		clapsRight.push_back(80.25);
 		clapsRight.push_back(80.75);
+		
+		
 		
 		clapsLeft.push_back(81.25);
 		clapsRight.push_back(81.75);
@@ -1555,6 +1572,7 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 void ofApp::exit() {
+	appGui.save();
 	redGui.save();
 	greenGui.save();
 	blueGui.save();
