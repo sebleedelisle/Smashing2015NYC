@@ -16,15 +16,18 @@ void ofApp::setup(){
 
 	
 	svgs.push_back(ofxSVG());
-    svgs.back().load("SmashingCat.svg");
-    
+	svgs.back().load("setoutline.svg");
+	
+	svgs.push_back(ofxSVG());
+	svgs.back().load("SmashingCat.svg");
+	
 	svgs.push_back(ofxSVG());
 	svgs.back().load("NyanCat.svg");
 	
-	svgs.push_back(ofxSVG());
-	svgs.back().load("california.svg");
-	worldMap.load("world map new file.svg");
-	laMap.load("california.svg");
+//	svgs.push_back(ofxSVG());
+//	svgs.back().load("california.svg");
+//	worldMap.load("world map new file.svg");
+//	laMap.load("california.svg");
 	
 	previewProjector = false;
 	
@@ -373,8 +376,10 @@ void ofApp::draw(){
     //    svgCounter++;
         
         if((currentSVG>=0) && (currentSVG<svgs.size())) {
-            laserManager.addLaserSVG(svgs[currentSVG], ofPoint(690,580 + sin(ofGetElapsedTimef()*3) * 50),ofPoint(0.5,0.5));
-        
+			
+			//laserManager.addLaserSVG(svgs[currentSVG], ofPoint(690,580 + sin(ofGetElapsedTimef()*3) * 50),ofPoint(0.5,0.5));
+			laserManager.addLaserSVG(svgs[currentSVG], ofPoint(screenWidth/2, screenHeight/2),ofPoint(0.5,0.5));
+			
             //laserManager.addLaserSVG(svgs[currentSVG], ofPoint(390,580),ofPoint(0.5,0.5));
 		
         }

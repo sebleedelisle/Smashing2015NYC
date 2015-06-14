@@ -147,8 +147,8 @@ class ofApp : public ofBaseApp{
 	Synchroniser sync;
 	
 	
-	ofxSVG worldMap;
-	ofxSVG laMap;
+	//ofxSVG worldMap;
+	//ofxSVG laMap;
 	
 	ofImage smashingTitle;
 	vector <ofxSVG> svgs;

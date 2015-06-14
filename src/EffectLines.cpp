@@ -277,7 +277,7 @@ void EffectLines :: draw(Synchroniser& sync) {
 	ofSetLineWidth(2);
 	ofSetColor(255);
 	ofNoFill();
-	ofEnableBlendMode(OF_BLENDMODE_ADD); 
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	
 	drawShape(kickShape, sync);
 	drawShape(guitarShape, sync);
