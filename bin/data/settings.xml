@@ -87,8 +87,8 @@
 		<flappy_sensitivity>1</flappy_sensitivity>
 		<stage_outline_pos>640, 480, 0</stage_outline_pos>
 		<stage_rotation>0, 0, 0</stage_rotation>
-		<stage_scale>0.372, 0.372, 0.372</stage_scale>
+		<stage_scale>0.328, 0.328, 0.328</stage_scale>
 	<lock_aspect>1</lock_aspect>
-	<show_stage_outline>0</show_stage_outline>
+	<show_stage_outline>1</show_stage_outline>
 	</App>
 </Settings>

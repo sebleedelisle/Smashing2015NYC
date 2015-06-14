@@ -13,7 +13,7 @@ void ofApp::setup(){
 	
 	guideImage.loadImage("img/GuideImageNYC.jpg");
 	smashingTitle.loadImage("img/titlecard.gif");
-	music.loadSound("../../../Music/Foolishness.aif");
+	music.loadSound("../../../Music/FoolishnessEdit.aif");
 
 	ofPoint centre(screenWidth/2, screenHeight/2);
 	
@@ -125,7 +125,7 @@ void ofApp::setup(){
 	soundPositionMS = 0;
 	
 	sync.tempo = 114;
-	sync.startPosition = -10;//-80;//(60000/111) - 5; // start after 1 beat intro
+	sync.startPosition = 0;//-10;//-80;//(60000/111) - 5; // start after 1 beat intro
 	
 	//pipeOrganData.load();
 	domeData.init();
@@ -859,7 +859,7 @@ void ofApp :: drawEffects() {
 	 
 	 */
 	
-	float clapsStart = 84;
+	float clapsStart = 88;
 	screenAnimation.clapsStart = clapsStart;
 	float clapsLength = 89.1 - 61;
 	float clapsEnd = clapsStart+clapsLength;
