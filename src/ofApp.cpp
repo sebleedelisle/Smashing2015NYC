@@ -22,6 +22,8 @@ void ofApp::setup(){
 	
 	stageOutlineSVG.load("setoutline.svg");
 	
+	initStageOutlinePoly();
+	
 	svgs.push_back(ofxSVG());
 	svgs.back().load("SmashingCat.svg");
 	
@@ -85,6 +87,7 @@ void ofApp::setup(){
 	appGui.add(showBands.set("show fft bands", false));
 	appGui.add(clappyBird.sensitivity.set("flappy sensitivity", 1,0,10));
 	
+	appGui.add(showStageOutline.set("show stage outline", false));
 	appGui.add(stageOutlinePosition.set("stage outline pos",centre, ofPoint(0,0, -1000),ofPoint(screenWidth, screenHeight, 1000) ));
 	appGui.add(stageOutlineRotation.set("stage rotation",ofPoint(0,0), ofPoint(-10,-10,-10),ofPoint(10,10,10) ));
 	appGui.add(stageOutlineScale.set("stage scale",ofPoint(1,1,1), ofPoint(0.2,0.2,0.2),ofPoint(1,1,1) ));
@@ -112,6 +115,7 @@ void ofApp::setup(){
 	pipeOrganData.editable = false;
 	laserDomePoints = false;
 	showBands = false;
+	showStageOutline = false;
 	
 	panels.push_back(&appGui);
 
@@ -488,7 +492,7 @@ void ofApp :: drawEffects() {
 	//showBlippySquares();
 	
 	
-	laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation);
+	if(showStageOutline) laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation);
 	
 
 	
@@ -1630,6 +1634,52 @@ void ofApp :: showNotes() {
 	
 }
 
+
+void ofApp::initStageOutlinePoly() {
+	
+	ofxSVG& svg = stageOutlineSVG;
+	
+	ofVec3f centrePoint = ofVec3f(svg.getWidth()/2, svg.getHeight()/2);// + centreOffset;
+	ofVec3f rotation( stageOutlineRotation);
+	ofPoint scale = stageOutlineScale;
+	ofPoint pos = stageOutlinePosition;
+	
+	cout << "READING SVG - numpaths = " << svg.getNumPath() << endl;
+	for(int i=0; i<svg.getNumPath(); i++ ) {
+		
+		vector<ofPolyline>& lines = svg.getPathAt(i).getOutline();
+		ofColor col = svg.getPathAt(i).getStrokeColor();
+		
+		for(int j=0; j<lines.size(); j++) {
+			ofPolyline line = lines[j];
+			
+			vector<ofVec3f>& vertices = line.getVertices();
+			for(int i = 0; i<vertices.size(); i++) {
+				ofVec3f& v = vertices[i];
+				v-=centrePoint;
+				v.rotate(rotation.x, ofPoint(1,0,0));
+				v.rotate(rotation.y, ofPoint(0,1,0));
+				v.rotate(rotation.z, ofPoint(0,0,1));
+				v*=scale;
+				//v.x *= scaleX;
+				//v.x+=width/2;
+				//v.y+=height/2;
+				
+				//v.x+=APP_WIDTH/2;
+				//v.y +=APP_HEIGHT*0.3;
+				v+=pos;
+				//line.
+				
+			}
+			line.simplify(0.1);
+			//cout << "brightness : " << brightness << endl;
+			//laserManager.addLaserPolyline(line,new ColourSystem(col),1);
+		}
+	}
+	
+	
+	
+}
 
 
 /*

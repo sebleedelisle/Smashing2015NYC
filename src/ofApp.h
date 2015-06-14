@@ -87,6 +87,8 @@ class ofApp : public ofBaseApp{
 	void initNotes();
 	void showNotes();
 	
+	void initStageOutlinePoly();
+	
 	//ofCamera cam;
 	//ColourSystem cyan;
 	
@@ -113,6 +115,8 @@ class ofApp : public ofBaseApp{
 	ofParameter<bool> showGuideImage;
 	ofParameter<bool> showBands;
 	
+	
+	ofParameter<bool> showStageOutline;
 	
 	ofParameter<ofPoint> stageOutlinePosition;
 	ofParameter<ofPoint> stageOutlineRotation;
@@ -176,6 +180,7 @@ class ofApp : public ofBaseApp{
 	AnimationSequence screenAnimation;
 	
 	ofPolyline poly;
+	ofPolyline stagePoly;
 	
 	
 	ofTrueTypeFont	proximaNovaLB;
