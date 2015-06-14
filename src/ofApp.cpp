@@ -619,7 +619,111 @@ void ofApp :: drawEffects() {
 		
 	}
 
+	// POST CHORUS
+	if((sync.currentBar >= 56) && (sync.currentBar<72)) {
+		
+		if(sync.currentBar>=64)
+		laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation, ofPoint(0,0), sync.beatPulse);
+	}
 	
+	
+	// CHORUS 2
+	if((sync.currentBarFloat>=72) && (sync.currentBarFloat<88)) {
+		
+		resetEffects();
+		
+		float progress = ofMap(sync.currentBarFloat, 72, 88, 0,1);
+		float brightness = 255;
+		
+		if(sync.currentBarFloat<72.125) brightness = ofMap(sync.currentBarFloat, 72,72.125,0,255);
+		else if(sync.currentBarFloat>87.75) brightness = ofMap(sync.currentBarFloat, 87.75,88,255,0);
+		
+		float numLines = 10;
+		float zMin = -3200,
+		zMax = 400;
+		float spikeSpacing = 400;
+		
+		float zoffset = ofMap(fmod(sync.currentBarFloat, 0.5f), 0, 0.5, 0,spikeSpacing);
+		float spinRotate = ofMap(fmod(sync.currentBarFloat, 4.0f), 0, 4, 0,-360);
+		//float numZigs = 18;
+		
+		// transitions!
+		
+		float fade = 1;
+//		if(sync.currentBarFloat<48) {
+//			zMin = ofMap(sync.currentBarFloat, 71,72,-10000,zMin);
+//			zMax = ofMap(sync.currentBarFloat, 71,72,-5000,zMax);
+//			
+//			fade = ofMap(sync.currentBarFloat, 47,47.5,0,1, true);
+//		} else if(sync.currentBarFloat>56) {
+//			zMin = ofMap(sync.currentBarFloat, 56,56.25,zMin, 600);
+//			zMax = ofMap(sync.currentBarFloat, 56,56.25,zMax, 600);
+//			
+//p		}
+		
+		
+		float size = 200;
+		float spikeSize = 20;
+		//float numSides = 9;
+		//float rotationSpeed = 100;
+		ofColor col ;
+		//float moveSpeed = 2;
+		
+		ofPoint rotateAxis = ofPoint(1,1,0);
+		rotateAxis.normalize();
+		rotateAxis.rotate(ofMap(fmod(sync.currentBarFloat, 16), 0, 16, 0,360), ofPoint(0,0,1));
+		
+		
+		ofPoint offset(40,40);
+		offset.rotate(ofMap(fmod(sync.currentBarFloat, 4), 0, 4, 0,360), ofPoint(0,0,1));
+		
+		//int highlight = (1-sync.beatPulse) * numRings;
+		
+		for(int i = 0; i<numLines; i++) {
+			
+			float angle = ofMap(i, 0, numLines, 0, 360) + spinRotate;
+			
+			poly.clear();
+			
+			for(float z = zMin-spikeSpacing; z< zMax+zoffset; z+=spikeSpacing) {
+			
+				ofPoint p;
+				
+				
+				
+				p.set(size+spikeSize, 0, ofClamp(z+ zoffset, zMin, zMax));
+				p.rotate(angle, ofPoint(0,0,1));
+				
+				//p+=offset;
+				p.rotate(15,rotateAxis);
+				p+=centre;//+ offset;
+				
+				
+				poly.addVertex(p);
+				
+				p.set(size,0,ofClamp(z+ zoffset, zMin, zMax));
+				
+				p.rotate(angle, ofPoint(0,0,1));
+				//p+=offset;
+				p.rotate(15,rotateAxis);
+				p+=centre;// + offset;
+				
+				poly.addVertex(p);
+				
+			}
+			
+			
+			col.setHsb(ofMap(i, 0, numLines, 0, 255), 255,brightness);
+			laserManager.addLaserPolyline(poly, col);
+			
+			
+			
+			
+		}
+		
+	}
+	
+
 	
 	
 //
