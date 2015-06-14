@@ -111,7 +111,14 @@ class ofApp : public ofBaseApp{
 	ofParameter<bool> laserDomePoints;
 	ofParameter<bool> laserOrganPoints;
 	ofParameter<bool> showGuideImage;
-	ofParameter<bool> showBands; 
+	ofParameter<bool> showBands;
+	
+	
+	ofParameter<ofPoint> stageOutlinePosition;
+	ofParameter<ofPoint> stageOutlineRotation;
+	ofParameter<ofPoint> stageOutlineScale;
+	ofParameter<bool> stageOutlineLockScaleAspect;
+	
 	
 	LaserManager& laserManager;
 	ParticleSystemManager& particleSystemManager;
@@ -149,6 +156,10 @@ class ofApp : public ofBaseApp{
 	
 	//ofxSVG worldMap;
 	//ofxSVG laMap;
+	
+	ofxSVG stageOutlineSVG;
+	
+	
 	
 	ofImage smashingTitle;
 	vector <ofxSVG> svgs;

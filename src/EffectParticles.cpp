@@ -57,13 +57,13 @@ void EffectParticles:: makeRainbowBurst(ofPoint pos) {
 	ParticleSystemSettings pss;
 	pss.emitLifeTime = 0.1;
 	pss.emitMode = PARTICLE_EMIT_BURST;
-	pss.emitCount = 10;
+	pss.emitCount = 20;
 	//pss.renderer = new ParticleRendererLaserLine(2);
 	pss.renderer = new ParticleRendererLaser();
 	//pss.renderer = new ParticleRendererShape();
-	pss.speedMin = 1000 ;
-	pss.speedMax = 2000;
-	pss.drag = 0.5;
+	pss.speedMin = 800 ;
+	pss.speedMax = 1600;
+	pss.drag = 0.6;
 	pss.gravity.set(0,500,0);
 	
 	pss.sizeStartMin = pss.sizeStartMax = 1;
@@ -82,7 +82,8 @@ void EffectParticles:: makeRainbowBurst(ofPoint pos) {
 	pss.saturationMin = pss.saturationMax = 255;
 	pss.saturationEnd = 255;
 	pss.brightnessStartMin = pss.brightnessStartMax =pss.brightnessEnd = 255;
-	pss.lifeMin = pss.lifeMax = 0.2;
+	pss.lifeMin = 0.1;
+	pss.lifeMax = 0.3;
 	pss.shimmerMin = 0;
 	pss.timeSpeed = 1;
 	//pss.doNotScale = true;

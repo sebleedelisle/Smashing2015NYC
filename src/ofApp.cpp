@@ -12,11 +12,15 @@ void ofApp::setup(){
 	screenHeight = 960;
 	
 	guideImage.loadImage("img/GuideImageNYC.jpg");
+	smashingTitle.loadImage("img/titlecard.gif");
 	music.loadSound("../../../Music/Foolishness.aif");
 
+	ofPoint centre(screenWidth/2, screenHeight/2);
 	
-	svgs.push_back(ofxSVG());
-	svgs.back().load("setoutline.svg");
+//	svgs.push_back(ofxSVG());
+//	svgs.back().load("setoutline.svg");
+	
+	stageOutlineSVG.load("setoutline.svg");
 	
 	svgs.push_back(ofxSVG());
 	svgs.back().load("SmashingCat.svg");
@@ -79,7 +83,12 @@ void ofApp::setup(){
 	appGui.add(laserOrganPoints.set("laser organ points", false));
 	appGui.add(showGuideImage.set("show guide image", true));
 	appGui.add(showBands.set("show fft bands", false));
-	appGui.add(clappyBird.sensitivity.set("flappy sensitivity", 1,0,10)); 
+	appGui.add(clappyBird.sensitivity.set("flappy sensitivity", 1,0,10));
+	
+	appGui.add(stageOutlinePosition.set("stage outline pos",centre, ofPoint(0,0, -1000),ofPoint(screenWidth, screenHeight, 1000) ));
+	appGui.add(stageOutlineRotation.set("stage rotation",ofPoint(0,0), ofPoint(-10,-10,-10),ofPoint(10,10,10) ));
+	appGui.add(stageOutlineScale.set("stage scale",ofPoint(1,1,1), ofPoint(0.2,0.2,0.2),ofPoint(2,2,2) ));
+
 	
 	redGui.setup("Laser Red", "laserred.xml");
 	redGui.add(laserManager.redParams );
@@ -195,7 +204,6 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofBackground(0);
 
-	
 	int numBands = 500;
 	vol = 0;
 	
@@ -232,6 +240,8 @@ void ofApp::draw(){
 	if(!previewProjector) {
 		ofSetColor(200);
 		if(showGuideImage) guideImage.draw(0,0,screenWidth, screenHeight);
+	
+		
 		ofSetColor(255);
 		ofRect(projectorPosition.x-1, projectorPosition.y-1, projectorPosition.width+2, projectorPosition.height+2);
 		projectorFbo.draw(projectorPosition);
@@ -346,6 +356,33 @@ void ofApp::draw(){
 	
 	
 	screenAnimation.draw(sync, vol);
+	
+	// title card
+	if(sync.currentBar<8) {
+		
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+		ofEnableSmoothing();
+		ofPushMatrix();
+		float scale = 0.34;
+		ofTranslate(-6,-20);
+		ofScale(scale, scale);
+		
+		ofSetColor(ofMap(sync.currentBarFloat, 4,6,255,0,true));
+	
+		ofTranslate(-smashingTitle.getWidth()/2, -smashingTitle.getHeight()/2, ofMap(sync.currentBarFloat, 0, 8, -600,-200));
+		
+		smashingTitle.draw(0,0);
+		ofPopMatrix();
+		
+		ofPopStyle();
+		
+		
+		
+	}
+	
+	
+	
 	ofPopMatrix();
 	
 	
@@ -377,8 +414,8 @@ void ofApp::draw(){
         
         if((currentSVG>=0) && (currentSVG<svgs.size())) {
 			
-			//laserManager.addLaserSVG(svgs[currentSVG], ofPoint(690,580 + sin(ofGetElapsedTimef()*3) * 50),ofPoint(0.5,0.5));
-			laserManager.addLaserSVG(svgs[currentSVG], ofPoint(screenWidth/2, screenHeight/2),ofPoint(0.5,0.5));
+			laserManager.addLaserSVG(svgs[currentSVG], ofPoint(690,580 + sin(ofGetElapsedTimef()*3) * 50),ofPoint(0.5,0.5));
+			//laserManager.addLaserSVG(svgs[currentSVG], ofPoint(screenWidth/2, screenHeight/2),ofPoint(0.5,0.5));
 			
             //laserManager.addLaserSVG(svgs[currentSVG], ofPoint(390,580),ofPoint(0.5,0.5));
 		
@@ -435,8 +472,11 @@ void ofApp :: drawEffects() {
 	
 	//showBlippySquares();
 	
-	// BIG SQUARES AND THEN WORLD MAP
+	
+	laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation);
+	
 
+	
 	if((sync.currentBar>=24) && (sync.currentBar<48)) {
 		// squares
 		resetEffects();
@@ -488,7 +528,7 @@ void ofApp :: drawEffects() {
 		
 		float progress = ofMap(sync.currentBarFloat, 48, 56, 0,1);
 		
-		float numRings = 6;
+		float numRings = 4;
 		float zMin = -100,
 			  zMax = 600;
 		
@@ -844,7 +884,7 @@ void ofApp :: drawEffects() {
 				pos += centre;
 				
 				poly.clear();
-				for (int i = 0; i<=16; i++) {
+				for (int i = -1; i<=16; i++) {
 					float angle = ofMap(i, 0, 16,0,360);
 					ofPoint p(0,0,-20);
 					p.rotate(angle, ofPoint(0,1,0));
@@ -857,7 +897,7 @@ void ofApp :: drawEffects() {
 				}
 				
 				ofColor col;
-				col.setHsb((int)(pos.z+2000)%255,240,255);
+				col.setHsb((int)(pos.z+3000)%255,240,ofMap(t,0,1,0,255,true));
 				laserManager.addLaserPolyline(poly, col);
 				
 			}
@@ -874,7 +914,7 @@ void ofApp :: drawEffects() {
 			
 			clap-=latency;
 			
-			if((sync.currentBarFloat+1.2 > clap) && (sync.currentBarFloat-0.0<clap)) {
+			if((sync.currentBarFloat+1 > clap) && (sync.currentBarFloat-0.0<clap)) {
 				
 				float t = ofMap(clap, sync.currentBarFloat+1, sync.currentBarFloat, 0, 1);
 				//ofPoint pos = domeData.getPointInDome(0.06, 180 + (t*rotationDistance));
@@ -884,7 +924,7 @@ void ofApp :: drawEffects() {
 				pos += centre;
 				
 				poly.clear();
-				for (int i = 0; i<=16; i++) {
+				for (int i = -1; i<=16; i++) {
 					float angle = ofMap(i, 0, 16,0,360);
 					ofPoint p(0,0,-20);
 					p.rotate(angle, ofPoint(0,1,0));
@@ -897,7 +937,7 @@ void ofApp :: drawEffects() {
 				}
 				
 				ofColor col;
-				col.setHsb((int)(pos.z+2000)%255,240,255);
+				col.setHsb((int)(pos.z+3000)%255, 240, ofMap(t,0,1,0,255,true));
 				laserManager.addLaserPolyline(poly, col);
 				
 			}
