@@ -122,14 +122,14 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
         //fade in text
         float progress = ofMap(barfloat, 63, 63.25,0,255);
         ofSetColor(225, 255,255,progress);
-        writeinPNL("CLAP WHEN THE CIRCLE HITS THE PIPES");
+        writeinPNL("CLAP WHEN THE CIRCLES HIT THE LINES");
     }
     
     if (bar >= 64.5 && bar < 64.75) {
         //fade out text
         float progress = ofMap(barfloat, 64.5, 64.75,255,0);
         ofSetColor(225, 255,255,progress);
-        writeinPNL("CLAP WHEN THE CIRCLE HITS THE PIPES");
+        writeinPNL("CLAP WHEN THE CIRCLES HIT THE LINES");
     }
     
     if (bar >= 65.0 && bar < 66.5) {

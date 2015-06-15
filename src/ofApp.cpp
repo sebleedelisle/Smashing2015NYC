@@ -13,7 +13,7 @@ void ofApp::setup(){
 	
 	guideImage.loadImage("img/GuideImageNYC.jpg");
 	smashingTitle.loadImage("img/titlecard.gif");
-	music.loadSound("../../../Music/FoolishnessEdit.aif");
+	music.loadSound("../../../Music/FoolishnessEdit2.aif");
 
 	ofPoint centre(screenWidth/2, screenHeight/2);
 	
@@ -22,7 +22,6 @@ void ofApp::setup(){
 	
 	stageOutlineSVG.load("setoutline.svg");
 	
-	initStageOutlinePoly();
 	
 	svgs.push_back(ofxSVG());
 	svgs.back().load("SmashingCat.svg");
@@ -93,6 +92,8 @@ void ofApp::setup(){
 	appGui.add(stageOutlineScale.set("stage scale",ofPoint(1,1,1), ofPoint(0.2,0.2,0.2),ofPoint(1,1,1) ));
 	appGui.add(stageOutlineLockScaleAspect.set("lock aspect", true));
 	
+	//showStageOutline.addListener(this, &ofApp::initStageOutlinePoly);
+	
 	
 	redGui.setup("Laser Red", "laserred.xml");
 	redGui.add(laserManager.redParams );
@@ -156,6 +157,8 @@ void ofApp::setup(){
 	wordParticles = deque<WordParticle>();
 	
 	initNotes();
+	initStageOutlinePoly();
+	
 	
 }
 
@@ -492,8 +495,10 @@ void ofApp :: drawEffects() {
 	//showBlippySquares();
 	
 	
-	if(showStageOutline) laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation);
-	
+	if(showStageOutline) {
+		laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation);
+		//laserManager.addLaserPolyline(stagePoly);
+	}
 
 	
 	if((sync.currentBar>=24) && (sync.currentBar<48)) {
@@ -622,26 +627,50 @@ void ofApp :: drawEffects() {
 	// POST CHORUS
 	if((sync.currentBar >= 56) && (sync.currentBar<72)) {
 		
-		if(sync.currentBar>=64)
-		laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation, ofPoint(0,0), sync.beatPulse);
+		if(sync.currentBar>=64) {
+			//laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation, ofPoint(0,0), sync.beatPulse);
+			
+			ofColor col;
+			col.setHsb(fmod(sync.currentBarFloat*16, 255), 255, sync.beatPulse*255);
+			ColourSystem* colsys = NULL;
+			
+			colsys = new ColourSystem(col);
+//
+//			if(sync.currentBar<68) colsys = new ColourSystem(col);
+//			else {
+//				ColourSystemGradient * colsysg = new ColourSystemGradient();
+//				for(float i = 0 ;i<=1; i+=0.01) {
+//					ofColor col(i*255.0f);
+//					colsysg->addColourStop(col, i);
+//					cout << col << " " << i << endl;
+//					
+//				}
+//				//colsysg->setLength(2000);
+//				colsys = colsysg;
+//			}
+			
+			laserManager.addLaserPolyline(stagePoly,colsys); // (stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation, ofPoint(0,0), sync.beatPulse);
+
+		
+		}
 	}
 	
 	
 	// CHORUS 2
-	if((sync.currentBarFloat>=72) && (sync.currentBarFloat<88)) {
+	if((sync.currentBarFloat>=71) && (sync.currentBarFloat<88)) {
 		
 		resetEffects();
 		
 		float progress = ofMap(sync.currentBarFloat, 72, 88, 0,1);
 		float brightness = 255;
-		
-		if(sync.currentBarFloat<72.125) brightness = ofMap(sync.currentBarFloat, 72,72.125,0,255);
-		else if(sync.currentBarFloat>87.75) brightness = ofMap(sync.currentBarFloat, 87.75,88,255,0);
+//		
+		if(sync.currentBarFloat<72) brightness = ofMap(sync.currentBarFloat, 71,72,0,255);
+//		else if(sync.currentBarFloat>87.75) brightness = ofMap(sync.currentBarFloat, 87.75,88,255,0);
 		
 		float numLines = 10;
 		float zMin = -2000,
 		zMax = 400;
-		float spikeSpacing = 400;
+		float spikeSpacing = 800;
 		
 		float zoffset = ofMap(fmod(sync.currentBarFloat, 0.25f), 0, 0.25, 0,spikeSpacing);
 		float spinRotate = ofMap(fmod(sync.currentBarFloat, 4.0f), 0, 4, 0,-360);
@@ -658,16 +687,16 @@ void ofApp :: drawEffects() {
 		// transitions!
 		
 		float fade = 1;
-//		if(sync.currentBarFloat<48) {
-//			zMin = ofMap(sync.currentBarFloat, 71,72,-10000,zMin);
-//			zMax = ofMap(sync.currentBarFloat, 71,72,-5000,zMax);
-//			
-//			fade = ofMap(sync.currentBarFloat, 47,47.5,0,1, true);
-//		} else if(sync.currentBarFloat>56) {
-//			zMin = ofMap(sync.currentBarFloat, 56,56.25,zMin, 600);
-//			zMax = ofMap(sync.currentBarFloat, 56,56.25,zMax, 600);
-//			
-//p		}
+		if(sync.currentBarFloat<72) {
+			zMin = ofMap(sync.currentBarFloat, 71,72,-10000,zMin);
+			zMax = ofMap(sync.currentBarFloat, 71,72,-5000,zMax);
+			
+			//fade = ofMap(sync.currentBarFloat, 71,72,0,1, true);
+		} else if(sync.currentBarFloat>87) {
+			zMin = ofMap(sync.currentBarFloat, 87,88,zMin, zMax);
+			//zMax = ofMap(sync.currentBarFloat, 87,88,zMax, 600);
+			
+		}
 		
 		
 		float sizeMin = 0;
@@ -678,10 +707,15 @@ void ofApp :: drawEffects() {
 		ofColor col ;
 		//float moveSpeed = 2;
 		
-		ofPoint rotateAxis = ofPoint(1,1,0);
-		rotateAxis.normalize();
-		rotateAxis.rotate(ofMap(fmod(sync.currentBarFloat, 8), 0, 8, 0,360), ofPoint(0,0,1));
-		float rotateAmount = ofMap(sync.currentBarFloat, 80, 88, 15, 0, true);;
+		//ofPoint rotateAxis = ofPoint(1,1,0);
+		//rotateAxis.normalize();
+		//rotateAxis.rotate(ofMap(fmod(sync.currentBarFloat, 8), 0, 8, 0,360), ofPoint(0,0,1));
+
+		float rotateMultiplier = ofMap(sync.currentBarFloat, 80, 88, 1, 0, true);
+
+		float rotateXAmount = sin(sync.currentBarFloat*2.3) * 10 * rotateMultiplier;
+		float rotateYAmount = sin(sync.currentBarFloat*1.9) * 15 *rotateMultiplier;
+		
 		
 		ofPoint offset(40,40);
 		offset.rotate(ofMap(fmod(sync.currentBarFloat, 4), 0, 4, 0,360), ofPoint(0,0,1));
@@ -713,10 +747,20 @@ void ofApp :: drawEffects() {
 				
 				if(z>zMin) {
 					p.set(size*(1+(spikeSize) ), 0, ofClamp(z+ zoffset, zMin, zMax));
-					p.rotate(angle + twist, ofPoint(0,0,1));
+					
+					float overlap = 0;
+					if(z+zoffset>zMax) {
+						
+						overlap = ((zMax- (z+zoffset)) / spikeSpacing);
+						p.set(size*(1+(spikeSize*overlap) ), 0, ofClamp(z+ zoffset, zMin, zMax));
+						
+					}
+					
+					p.rotate(angle + (twist), ofPoint(0,0,1));
 				
 					//p+=offset;
-					p.rotate(rotateAmount,rotateAxis);
+					p.rotate(rotateXAmount,ofPoint(1,0,0));
+					p.rotate(rotateYAmount,ofPoint(0,1,0));
 					//p.rotate(xRotate, ofPoint(0,1,0));
 					p+=centre;//+ offset;
 				
@@ -729,7 +773,10 @@ void ofApp :: drawEffects() {
 				
 					p.rotate(angle+twist, ofPoint(0,0,1));
 					//p+=offset;
-					p.rotate(rotateAmount,rotateAxis);
+					//p.rotate(rotateAmount,rotateAxis);
+					p.rotate(rotateXAmount,ofPoint(1,0,0));
+					p.rotate(rotateYAmount,ofPoint(0,1,0));
+					
 					p+=centre;// + offset;
 					//p.rotate(xRotate, ofPoint(0,1,0));
 				
@@ -886,7 +933,7 @@ void ofApp :: drawEffects() {
 	
 	float clapsStart = 88;
 	screenAnimation.clapsStart = clapsStart;
-	float clapsLength = 89.1 - 61 +8;
+	float clapsLength = 89.1 - 61 +16;
 	float clapsEnd = clapsStart+clapsLength;
 	
 	if((sync.currentBar>=clapsStart) && (sync.currentBarFloat<clapsEnd)) {
@@ -920,26 +967,124 @@ void ofApp :: drawEffects() {
 		vector<float>clapsRight = clapsLeft;
 		
 		
+		// LEFT SIDE
 		clapsLeft.push_back(77.25);
 		clapsLeft.push_back(77.75);
 		clapsLeft.push_back(78.25);
 		clapsLeft.push_back(78.75);
 
+		// RIGHT SIDE
 		clapsRight.push_back(79.25);
 		clapsRight.push_back(79.75);
 		clapsRight.push_back(80.25);
 		clapsRight.push_back(80.75);
 		
 		
+		// ALTERNATING
 		
-		clapsLeft.push_back(81.25);
-		clapsRight.push_back(81.75);
-		clapsLeft.push_back(82.25);
-		clapsRight.push_back(82.75);
-		clapsLeft.push_back(83.25);
-		clapsRight.push_back(83.75);
-		clapsLeft.push_back(84.25);
-		clapsRight.push_back(84.75);
+		float bar = 81.0;
+		clapsLeft.push_back (bar + 0.25);
+		clapsRight.push_back(bar + 0.75);
+		clapsLeft.push_back (bar + 1.25);
+		clapsRight.push_back(bar + 1.75);
+		clapsLeft.push_back (bar + 2.25);
+		clapsRight.push_back(bar + 2.25);
+		clapsLeft.push_back (bar + 3.25);
+		clapsRight.push_back(bar + 3.25);
+		
+		bar = 85;
+		clapsLeft.push_back (bar + 0.25);
+		clapsRight.push_back(bar + 0.75);
+		clapsLeft.push_back (bar + 1.25);
+		clapsRight.push_back(bar + 1.75);
+		clapsLeft.push_back (bar + 2.25);
+		clapsRight.push_back(bar + 2.25);
+		clapsLeft.push_back (bar + 3.25);
+		clapsRight.push_back(bar + 3.25);
+		
+		
+		bar = 89;
+		clapsLeft.push_back (bar + 0.25);
+		clapsRight.push_back(bar + 0.75);
+		clapsLeft.push_back (bar + 1.25);
+		clapsRight.push_back(bar + 1.75);
+		clapsLeft.push_back (bar + 2.00);
+		clapsRight.push_back(bar + 2.00);
+		clapsLeft.push_back (bar + 2.25);
+		clapsRight.push_back(bar + 2.25);
+		clapsLeft.push_back (bar + 3.00);
+		clapsRight.push_back(bar + 3.00);
+		clapsLeft.push_back (bar + 3.25);
+		clapsRight.push_back(bar + 3.25);
+		
+		
+		bar = 93;
+		clapsLeft.push_back (bar + 0.25);
+		clapsRight.push_back(bar + 0.75);
+		clapsLeft.push_back (bar + 1.25);
+		clapsRight.push_back(bar + 1.75);
+		clapsLeft.push_back (bar + 2.00);
+		clapsRight.push_back(bar + 2.00);
+		clapsLeft.push_back (bar + 2.25);
+		clapsRight.push_back(bar + 2.25);
+		clapsLeft.push_back (bar + 3.00);
+		clapsRight.push_back(bar + 3.00);
+		clapsLeft.push_back (bar + 3.25);
+		clapsRight.push_back(bar + 3.25);
+		
+		
+		bar = 97;
+		clapsLeft.push_back (bar + 0.00);
+		clapsLeft.push_back (bar + 0.25);
+		clapsRight.push_back(bar + 0.50);
+		clapsRight.push_back(bar + 0.75);
+		clapsLeft.push_back (bar + 1.00);
+		clapsLeft.push_back (bar + 1.25);
+		clapsRight.push_back(bar + 1.50);
+		clapsRight.push_back(bar + 1.75);
+		clapsLeft.push_back (bar + 2.00);
+		clapsRight.push_back(bar + 2.00);
+		clapsLeft.push_back (bar + 2.25);
+		clapsRight.push_back(bar + 2.25);
+		clapsLeft.push_back (bar + 3.00);
+		clapsRight.push_back(bar + 3.00);
+		clapsLeft.push_back (bar + 3.125);
+		clapsRight.push_back(bar + 3.125);
+		clapsLeft.push_back (bar + 3.25);
+		clapsRight.push_back(bar + 3.25);
+		
+		bar = 101;
+		clapsLeft.push_back (bar + 0.00);
+		clapsLeft.push_back (bar + 0.25);
+		clapsRight.push_back(bar + 0.50);
+		clapsRight.push_back(bar + 0.75);
+		clapsLeft.push_back (bar + 1.00);
+		clapsLeft.push_back (bar + 1.125);
+		clapsLeft.push_back (bar + 1.25);
+		clapsRight.push_back(bar + 1.50);
+		clapsRight.push_back(bar + 1.635);
+		clapsRight.push_back(bar + 1.75);
+		clapsLeft.push_back (bar + 2.00);
+		clapsRight.push_back(bar + 2.00);
+		clapsLeft.push_back (bar + 2.25);
+		clapsRight.push_back(bar + 2.25);
+		clapsLeft.push_back (bar + 3.00);
+		clapsRight.push_back(bar + 3.00);
+		clapsLeft.push_back (bar + 3.125);
+		clapsRight.push_back(bar + 3.125);
+		clapsLeft.push_back (bar + 3.25);
+		clapsRight.push_back(bar + 3.25);
+		
+		clapsLeft.push_back (bar + 3.375);
+		clapsRight.push_back(bar + 3.375);
+		clapsLeft.push_back (bar + 3.50);
+		clapsRight.push_back(bar + 3.50);
+		clapsLeft.push_back (bar + 3.625);
+		clapsRight.push_back(bar + 3.625);
+		clapsLeft.push_back (bar + 3.75);
+		clapsRight.push_back(bar + 3.75);
+		
+		/*
 		
 		clapsLeft.push_back(85.0);
 		clapsLeft.push_back(85.25);
@@ -981,6 +1126,9 @@ void ofApp :: drawEffects() {
 		clapsRight.push_back(88.75);
 		clapsRight.push_back(88.875);
 		clapsRight.push_back(89);
+		 
+		 
+		 */
 		
 		for(int i = 0; i<clapsLeft.size(); i++) {
 			clapsLeft[i] += clapsStart-61;
@@ -990,7 +1138,7 @@ void ofApp :: drawEffects() {
 		}
 		
 		
-		float latency = 0;//0.05;
+		float latency = 0.02;//0.05;
 		float xrotation = -15;
 		
 		ofPoint leftPos (-100,100);
@@ -1099,6 +1247,10 @@ void ofApp :: drawEffects() {
 		
 		
 		
+	}
+	
+	if((sync.currentBar == 134) && (sync.barTriggered)) {
+		effectParticles.makeStarBurst();
 	}
 	
 //	if((sync.currentBar>=89)&&(sync.currentBar<90)) {
@@ -1694,6 +1846,7 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
+	initStageOutlinePoly();
 	pipeOrganData.mouseReleased(x,y);
 
 }
@@ -1766,6 +1919,9 @@ void ofApp :: showNotes() {
 
 void ofApp::initStageOutlinePoly() {
 	
+	
+	stagePoly.clear();
+	
 	ofxSVG& svg = stageOutlineSVG;
 	
 	ofVec3f centrePoint = ofVec3f(svg.getWidth()/2, svg.getHeight()/2);// + centreOffset;
@@ -1784,7 +1940,7 @@ void ofApp::initStageOutlinePoly() {
 			
 			vector<ofVec3f>& vertices = line.getVertices();
 			for(int i = 0; i<vertices.size(); i++) {
-				ofVec3f& v = vertices[i];
+				ofVec3f v = vertices[i];
 				v-=centrePoint;
 				v.rotate(rotation.x, ofPoint(1,0,0));
 				v.rotate(rotation.y, ofPoint(0,1,0));
@@ -1798,9 +1954,14 @@ void ofApp::initStageOutlinePoly() {
 				//v.y +=APP_HEIGHT*0.3;
 				v+=pos;
 				//line.
+				//cout << "add Vertex " << v << " " << vertices[i] << endl;
+				stagePoly.addVertex(v);
 				
 			}
-			line.simplify(0.1);
+			//line.simplify(0.1);
+			
+			//stagePoly.simplify(0.1);
+			
 			//cout << "brightness : " << brightness << endl;
 			//laserManager.addLaserPolyline(line,new ColourSystem(col),1);
 		}

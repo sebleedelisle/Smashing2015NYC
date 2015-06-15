@@ -27,8 +27,8 @@ void PipeOrganData::init(ofRectangle rect) {
 		pipes.push_back(Pipe(i));
 		Pipe& pipe = pipes[pipes.size()-1];
 		
-		pipe.setTop(ofMap(i,0,numPipes, rect.getLeft(), rect.getRight()), rect.getTop());
-		pipe.setBottom(pipe.top.x, rect.getBottom());
+		pipe.setTop(ofMap(i,0,numPipes, rect.getLeft(), rect.getRight()), rect.getTop()+rect.getHeight()/3);
+		pipe.setBottom(pipe.top.x, rect.getBottom()-rect.getHeight()/3);
 		
 		params.add(pipe.topParam);
 		params.add(pipe.bottomParam);

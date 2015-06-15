@@ -129,7 +129,7 @@ class AudioShape {
 		ofSetLineWidth(1);
 		//deque<LineSpike> &spikes = shape.spikes;
 		ofBeginShape();
-		ofVertex(0,0,0);
+		if(emittingSpikes) ofVertex(0,0,0);
 		for (int i = spikes.size()-1; i>=0; i-- ) {
 			LineSpike&spike = spikes[i];
 			

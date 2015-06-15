@@ -110,19 +110,19 @@ void EffectParticles:: makeStarBurst(float timespeed ) {
 		ParticleSystem &ps = *particleSystemManager.getParticleSystem();
 		
 		ParticleSystemSettings pss;
-		pss.emitLifeTime = 0.1;
+		pss.emitLifeTime = 0.2;
 		//pss.emitMode = PARTICLE_EMIT_BURST;
 		pss.emitCount = 20;
-	//	pss.renderer = new ParticleRendererLaser();
-		pss.renderer = new ParticleRendererShape();
+		pss.renderer = new ParticleRendererLaser();
+	//	pss.renderer = new ParticleRendererShape();
 		
 		
-		pss.speedMin = 2000 ;
-		pss.speedMax = 2650;
+		pss.speedMin = 1000 ;
+		pss.speedMax = 1650;
 		pss.drag = 0.90;
 		pss.gravity.set(0,600,0);
 		
-		pss.sizeStartMin = pss.sizeStartMax = 10;
+		pss.sizeStartMin = pss.sizeStartMax = 1;
 		pss.sizeChangeRatio = 0.5;
 		//pss.emitShape = &explodeMesh;
 		pss.directionYVar = pss.directionZVar = 0;
@@ -142,7 +142,7 @@ void EffectParticles:: makeStarBurst(float timespeed ) {
 	
 		pss.emitDelay = ofRandom(0.1);
 
-		ps.pos = pipeOrganData->pipes[i].bottom;
+		ps.pos = pipeOrganData->pipes[i].bottom + ofPoint(0,100);
 		ps.init(pss);
 	}
 	
