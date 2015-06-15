@@ -47,7 +47,7 @@ void ofApp::setup(){
 	
 	ofSetColor(255);
 	//projectorPosition.set(screenWidth/5*2.14, screenHeight*4/5 * 0.99, screenWidth/5, screenHeight/5);
-	projectorPosition.set(435, 322, 399, 299);
+	projectorPosition.set(439, 324, 402, 301);
 	
 	pipeOrganData.init(projectorPosition); 
 	
@@ -639,13 +639,21 @@ void ofApp :: drawEffects() {
 		else if(sync.currentBarFloat>87.75) brightness = ofMap(sync.currentBarFloat, 87.75,88,255,0);
 		
 		float numLines = 10;
-		float zMin = -3200,
+		float zMin = -2000,
 		zMax = 400;
 		float spikeSpacing = 400;
 		
-		float zoffset = ofMap(fmod(sync.currentBarFloat, 0.5f), 0, 0.5, 0,spikeSpacing);
+		float zoffset = ofMap(fmod(sync.currentBarFloat, 0.25f), 0, 0.25, 0,spikeSpacing);
 		float spinRotate = ofMap(fmod(sync.currentBarFloat, 4.0f), 0, 4, 0,-360);
 		//float numZigs = 18;
+		float twistAmount = ofMap(sync.currentBarFloat, 80, 88, 0, -480, true);
+		
+		//bool useVolumes = sync.currentBar>=80;
+		float hueOffset = ofMap(fmod(sync.currentBarFloat, 0.5f), 0, 0.5, 0,255);
+		
+		
+		
+		//float xRotate = sin(sync.currentBarFloat*3)*4;
 		
 		// transitions!
 		
@@ -662,8 +670,9 @@ void ofApp :: drawEffects() {
 //p		}
 		
 		
-		float size = 200;
-		float spikeSize = 20;
+		float sizeMin = 0;
+		float sizeMax = 200;
+		float spikeSize = 0.1;
 		//float numSides = 9;
 		//float rotationSpeed = 100;
 		ofColor col ;
@@ -671,8 +680,8 @@ void ofApp :: drawEffects() {
 		
 		ofPoint rotateAxis = ofPoint(1,1,0);
 		rotateAxis.normalize();
-		rotateAxis.rotate(ofMap(fmod(sync.currentBarFloat, 16), 0, 16, 0,360), ofPoint(0,0,1));
-		
+		rotateAxis.rotate(ofMap(fmod(sync.currentBarFloat, 8), 0, 8, 0,360), ofPoint(0,0,1));
+		float rotateAmount = ofMap(sync.currentBarFloat, 80, 88, 15, 0, true);;
 		
 		ofPoint offset(40,40);
 		offset.rotate(ofMap(fmod(sync.currentBarFloat, 4), 0, 4, 0,360), ofPoint(0,0,1));
@@ -683,37 +692,53 @@ void ofApp :: drawEffects() {
 			
 			float angle = ofMap(i, 0, numLines, 0, 360) + spinRotate;
 			
+			//float rotateOffsetNew = rotateOffset;
+			//if(i%2 == 0) rotateOffsetNew*=-1;
+			
 			poly.clear();
 			
 			for(float z = zMin-spikeSpacing; z< zMax+zoffset; z+=spikeSpacing) {
-			
+				
+				float twist = ofMap(z+ zoffset, zMin-spikeSpacing, zMax, twistAmount, 0);
+//				float vol = 0;
+//				if(useVolumes && ( volumes.size()>0)) {
+//					int volindex = ofMap(z+ zoffset, zMin-spikeSpacing, zMax, 0, 10);
+//					volindex = ofClamp(volindex, 0, volumes.size());
+//					
+//					vol = volumes[volindex]*40;
+//					
+//				}
 				ofPoint p;
+				float size = ofMap(z+ zoffset, zMin-spikeSpacing, zMax, sizeMin, sizeMax);
+				
+				if(z>zMin) {
+					p.set(size*(1+(spikeSize) ), 0, ofClamp(z+ zoffset, zMin, zMax));
+					p.rotate(angle + twist, ofPoint(0,0,1));
+				
+					//p+=offset;
+					p.rotate(rotateAmount,rotateAxis);
+					//p.rotate(xRotate, ofPoint(0,1,0));
+					p+=centre;//+ offset;
 				
 				
+					poly.addVertex(p);
+				}
 				
-				p.set(size+spikeSize, 0, ofClamp(z+ zoffset, zMin, zMax));
-				p.rotate(angle, ofPoint(0,0,1));
+				if(z<zMax){
+					p.set(size,0,ofClamp(z+ zoffset, zMin, zMax));
 				
-				//p+=offset;
-				p.rotate(15,rotateAxis);
-				p+=centre;//+ offset;
+					p.rotate(angle+twist, ofPoint(0,0,1));
+					//p+=offset;
+					p.rotate(rotateAmount,rotateAxis);
+					p+=centre;// + offset;
+					//p.rotate(xRotate, ofPoint(0,1,0));
 				
-				
-				poly.addVertex(p);
-				
-				p.set(size,0,ofClamp(z+ zoffset, zMin, zMax));
-				
-				p.rotate(angle, ofPoint(0,0,1));
-				//p+=offset;
-				p.rotate(15,rotateAxis);
-				p+=centre;// + offset;
-				
-				poly.addVertex(p);
-				
+					poly.addVertex(p);
+				}
 			}
 			
 			
-			col.setHsb(ofMap(i, 0, numLines, 0, 255), 255,brightness);
+			col.setHsb(fmod(ofMap(i, 0, numLines, 0, 255)+hueOffset,255.0f), 255,brightness);
 			laserManager.addLaserPolyline(poly, col);
 			
 			
