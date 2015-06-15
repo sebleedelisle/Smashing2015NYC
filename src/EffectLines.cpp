@@ -100,14 +100,21 @@ void EffectLines :: draw(Synchroniser& sync) {
 
 	
 	//float yRotation = (ofGetMouseX() - (ofGetWidth()/2));
+	if(sync.currentBar>12) {
+		hihatShape.enabled = true;
+		kickShape.enabled = true;
+		snareShape.enabled = true;
+		guitarShape.enabled = true;
 	
+		
+	}
 	
 	if(sync.currentBar<8) {
 		
 		if(sync.currentBarFloat<0.5) {
-			kickShape.colour = ofColor(ofMap(sync.currentBarFloat, 0, 0.5, 0,255));
+			kickShape.brightness = ofMap(sync.currentBarFloat, 0, 0.5, 0,255);
 		} else {
-			kickShape.colour = ofColor(255);
+			kickShape.brightness = 255;
 		}
 		if(sync.currentBar<4) {
 			kickShape.targetSize = ofMap(sync.currentBarFloat, 0, 4, 1, 0.5);
@@ -185,7 +192,7 @@ void EffectLines :: draw(Synchroniser& sync) {
 			guitarShape.rainbows = true;
 		}
 		
-	} else if((sync.currentBar>=56)&&(sync.currentBar<84)) {
+	} else if((sync.currentBar>=56)&&(sync.currentBar<88)) {
 		// AFTER FIRST CHORUS
 		
 		camera.setPosition(0,0,ofMap(sync.currentBarFloat, 56, 57, 1000,400,true));
@@ -206,6 +213,21 @@ void EffectLines :: draw(Synchroniser& sync) {
 		kickShape.rainbows = true;
 		snareShape.rainbows = true;
 		guitarShape.rainbows = true;
+		
+		if(sync.currentBar>=72) {
+			hihatShape.emittingSpikes = false;
+			kickShape.emittingSpikes = false;
+			snareShape.emittingSpikes = false;
+			guitarShape.emittingSpikes = false;
+		}
+		
+	} else if((sync.currentBar>=88)) {
+		
+		hihatShape.enabled = false;
+		kickShape.enabled = false;
+		snareShape.enabled = false;
+		guitarShape.enabled = false;
+		
 		
 	} else if (false) {
 		

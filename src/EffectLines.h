@@ -96,10 +96,10 @@ class AudioShape {
 		if(rainbows) {
 			
 			ofSetLineWidth(size*5);
-			col.setHsb((int)rotation%255, 250,255);
+			col.setHsb((int)rotation%255, 250,brightness);
 			
 		}else {
-			col = colour;
+			col = ofColor(brightness);
 			ofSetLineWidth(2);
 		}
 		
@@ -184,7 +184,7 @@ class AudioShape {
 	ofPoint targetPos = ofPoint(0,0,0);
 	ofPoint vel = ofPoint(0,0,0);
 	
-	ofColor colour = ofColor::white;
+	float brightness = 255;
 	
 	bool enabled  = false;
 	
