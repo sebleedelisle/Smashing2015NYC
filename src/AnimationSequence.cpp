@@ -201,6 +201,9 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 		writeinPNL("ALTERNATING!");
 	}
 	
+	bar +=(clapsStart - 61);
+	
+	
 	
 	/*
 	if (barfloat > 90 && barfloat < 100 ) {
