@@ -631,7 +631,7 @@ void ofApp :: drawEffects() {
 			//laserManager.addLaserSVG(stageOutlineSVG, stageOutlinePosition, stageOutlineScale, stageOutlineRotation, ofPoint(0,0), sync.beatPulse);
 			
 			ofColor col;
-			col.setHsb(fmod(sync.currentBarFloat*16, 255), 255, sync.beatPulse*255);
+			col.setHsb(fmod(sync.currentBarFloat*128, 255), 255, sync.beatPulse*255);
 			ColourSystem* colsys = NULL;
 			
 			colsys = new ColourSystem(col);

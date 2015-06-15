@@ -219,9 +219,13 @@ void EffectLines :: draw(Synchroniser& sync) {
 			kickShape.emittingSpikes = false;
 			snareShape.emittingSpikes = false;
 			guitarShape.emittingSpikes = false;
+			hihatShape.enabled = false;
+			kickShape.enabled = false;
+			snareShape.enabled = false;
+			guitarShape.enabled = false;
 		}
 		
-	} else if((sync.currentBar>=88)) {
+	} else if((sync.currentBar>=72)) {
 		
 		hihatShape.enabled = false;
 		kickShape.enabled = false;

@@ -85,9 +85,9 @@
 		<show_guide_image>1</show_guide_image>
 		<show_fft_bands>0</show_fft_bands>
 		<flappy_sensitivity>1</flappy_sensitivity>
-		<stage_outline_pos>569.6, 542.4, 0</stage_outline_pos>
+		<stage_outline_pos>582.4, 542.4, 0</stage_outline_pos>
 		<stage_rotation>0, 0, 0</stage_rotation>
-		<stage_scale>0.368, 0.368, 0.368</stage_scale>
+		<stage_scale>0.376, 0.376, 0.376</stage_scale>
 	<lock_aspect>1</lock_aspect>
 	<show_stage_outline>0</show_stage_outline>
 	</App>
