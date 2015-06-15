@@ -101,6 +101,7 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 //    }
 	
 	
+	// THIS FUCKS WITH BAR NUMBER
 	bar -=(clapsStart - 61);
 	
     if (bar >= 61.0 && bar < 62.5) {
@@ -202,6 +203,8 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 	}
 	
 	bar +=(clapsStart - 61);
+	
+	// BAR NUMBER IS UNFUCKED FROM THIS POINT ON
 	
 	
 	
