@@ -149,7 +149,9 @@ class ofApp : public ofBaseApp{
     
     int svgCounter; 
 	
-	bool previewProjector; 
+	bool previewProjector;
+	
+	float clapLineBrightness = 0; 
 	
 
 	ofSoundPlayer music;

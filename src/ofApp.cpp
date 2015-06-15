@@ -1157,10 +1157,12 @@ void ofApp :: drawEffects() {
 		bottomleft+=centre;
 		bottomright+=centre;
 		
+		ofColor col;
+		col.setHsb(128,(1-clapLineBrightness)*255,255);
+		clapLineBrightness*=0.97;
 		
-		
-		laserManager.addLaserLineEased(left, right, ofColor::cyan);
-		laserManager.addLaserLineEased(bottomleft, bottomright, ofColor::cyan);
+		laserManager.addLaserLineEased(left, right, col);
+		laserManager.addLaserLineEased(bottomleft, bottomright, col);
 		
 		for (int i = 0; i<clapsLeft.size(); i++) {
 			float clap = clapsLeft[i];
@@ -1169,6 +1171,7 @@ void ofApp :: drawEffects() {
 		
 				//effectPipeOrganLines.pulseSide(true, ofColor::cyan);
 				effectParticles.makeRainbowBurst(left + ofPoint(50,0));
+				clapLineBrightness = 1;
 			}
 			
 			clap-=latency;
@@ -1208,6 +1211,7 @@ void ofApp :: drawEffects() {
 			if((sync.eighthTriggered) && (sync.currentBar + ((float)sync.current8th / 8.0f) == clap)) {
 				effectParticles.makeRainbowBurst(right - ofPoint(50,0));
 				//effectPipeOrganLines.pulseSide(false, ofColor::cyan);
+				clapLineBrightness = 1;
 			}
 			
 			clap-=latency;
@@ -1636,7 +1640,7 @@ void ofApp::keyPressed(int key){
 //	}
 	
 	if(key == 's') {
-		effectParticles.makeStarBurst(0.5);
+		effectParticles.makeStarBurst();
 	}
 
 }
