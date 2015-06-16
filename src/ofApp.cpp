@@ -24,6 +24,8 @@ void ofApp::setup(){
 	
 	
 	svgs.push_back(ofxSVG());
+	svgs.back().load("nycbat.svg");
+	svgs.push_back(ofxSVG());
 	svgs.back().load("SmashingCat.svg");
 	
 	svgs.push_back(ofxSVG());

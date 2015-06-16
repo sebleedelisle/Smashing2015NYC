@@ -16,7 +16,7 @@
 			<laser_on_during_move>0</laser_on_during_move>
 			<preview_laser>1</preview_laser>
 			<preview_laser_dots>0</preview_laser_dots>
-			<post_transform_dots>0</post_transform_dots>
+			<post_transform_dots>1</post_transform_dots>
 			<move_speed>20</move_speed>
 			<move_points_padding>8</move_points_padding>
 			<shape_pre_blank_points>0</shape_pre_blank_points>
@@ -32,6 +32,7 @@
 			<spiral_spacing>20</spiral_spacing>
 		<use_mask_bitmap>0</use_mask_bitmap>
 			<show_mask_bitmap>0</show_mask_bitmap>
-		</Laser_Manager>
+		<scale>1</scale>
+	</Laser_Manager>
 <LaserManager/>
 </LaserManager>

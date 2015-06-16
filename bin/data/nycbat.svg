@@ -1,25 +1,14 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="144px" height="96.5px" viewBox="0 0 144 96.5" style="enable-background:new 0 0 144 96.5;" xml:space="preserve">
-<path style="fill:none;stroke:#DB4398;stroke-linecap:round;stroke-miterlimit:10;" d="M63.508,52.363
-	c-0.791,0.176-5.176,6.045-5.176,6.045l-2.654-5.91l-2.637,5.329l-2.209-5.048c0,0-3.879-0.991-7.253,2.893
-	c0,0-1.389-14.719,13.723-19.468c0,0-0.959,10.67,8.083,11.695l0.064,0.009c-2.628-6.547,2.534-10.528,2.534-10.528l1.442,5.493
-	c3.27-1.772,5.708-0.369,5.708-0.369l0.636-4.576c4.281,4.038,2.844,10.27,2.844,10.27c9.042-1.026,8.084-11.696,8.084-11.696
-	c15.11,4.749,13.723,19.468,13.723,19.468c-3.374-3.883-7.254-2.893-7.254-2.893l-2.208,5.049l-2.638-5.33l-2.654,5.91
-	c0,0-3.081-6.865-4.553-6.176c-1.474,0.689,3.429,7.312-7.866,7.748C61.731,60.722,64.299,52.187,63.508,52.363z"/>
-<ellipse style="fill:none;stroke:#DB4398;stroke-linecap:round;stroke-miterlimit:10;" cx="72" cy="48.25" rx="71.5" ry="47.75"/>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
+	 width="144px" height="96.5px" viewBox="0 0 144 96.5" enable-background="new 0 0 144 96.5" xml:space="preserve">
+<path fill="none" stroke="#FFDA00" stroke-linecap="round" stroke-miterlimit="10" d="M41.362,63.092
+	C38.509,63.726,22.689,84.9,22.689,84.9l-9.576-21.322L3.6,82.805l-7.97-18.212c0,0-13.995-3.577-26.168,10.437
+	c0,0-5.011-53.104,49.51-70.238c0,0-3.46,38.496,29.162,42.193l0.232,0.034c-9.483-23.622,9.141-37.985,9.141-37.985l5.203,19.818
+	c11.799-6.393,20.595-1.331,20.595-1.331l2.297-16.511C101.043,25.579,95.86,48.065,95.86,48.065
+	c32.62-3.704,29.166-42.199,29.166-42.199C179.54,23,174.535,76.103,174.535,76.103c-12.172-14.007-26.169-10.437-26.169-10.437
+	l-7.968,18.216l-9.516-19.229l-9.578,21.323c0,0-11.114-24.77-16.426-22.286C99.56,66.177,117.251,90.073,76.5,91.646
+	C34.952,93.252,44.216,62.458,41.362,63.092z"/>
+<ellipse fill="none" stroke="#FFDA00" stroke-linecap="round" stroke-miterlimit="10" cx="72" cy="48.25" rx="145" ry="96.836"/>
 </svg>
