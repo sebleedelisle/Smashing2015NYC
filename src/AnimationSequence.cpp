@@ -208,26 +208,26 @@ void AnimationSequence:: draw(Synchroniser& sync, float volume) {
 	
 	
 	
-	/*
-	if (barfloat > 90 && barfloat < 100 ) {
-		
-		        float progress = ofMap(barfloat, 76, 78, 0, 255);
-		        proximaNovaLB.setSpaceSize(.9);
-		        ofSetColor(255,0,255,progress);
-		        ofPushMatrix();
-		        //ofTranslate(0, 100);
-		        string message = "MADE BY:";
-		        float halfWidth = proximaNovaL.stringWidth(message)/2;
-		        proximaNovaL.drawString(message, -1*halfWidth, 0);
-		
-		        ofSetColor(255,255,255,progress);
-		        message = "@SEB_LY & @VLH";
-		        halfWidth = proximaNovaLB.stringWidth(message)/2;
-		        proximaNovaLB.drawString(message, -1*halfWidth, 72);
-		
-		        ofPopMatrix();
+	
+	if (barfloat > 133 && barfloat < 140 ) {
+	
+			float progress = ofMap(barfloat, 133, 133.5, 0, 255);
+			proximaNovaLB.setSpaceSize(.9);
+			ofSetColor(255,0,255,progress);
+			ofPushMatrix();
+			//ofTranslate(0, 100);
+			string message = "MADE BY:";
+			float halfWidth = proximaNovaL.stringWidth(message)/2;
+			proximaNovaL.drawString(message, -1*halfWidth, 0);
+	
+			ofSetColor(255,255,255,progress);
+			message = "@SEB_LY & @VLH";
+			halfWidth = proximaNovaLB.stringWidth(message)/2;
+			proximaNovaLB.drawString(message, -1*halfWidth, 72);
+	
+			ofPopMatrix();
 		    
-	}*/
+	}
 	
 	
 	
